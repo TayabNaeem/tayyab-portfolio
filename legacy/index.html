@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tayyab Naeem — Shopify Developer, AI Chatbot Developer & AI Automation Engineer building high-converting stores and intelligent automation." />
+  <title>Tayyab Naeem — Shopify & AI Automation Developer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Background decoration -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow glow-1" aria-hidden="true"></div>
+  <div class="bg-glow glow-2" aria-hidden="true"></div>
+
+  <!-- Navbar -->
+  <header class="nav" id="nav">
+    <div class="nav__bar">
+      <a href="#home" class="nav__logo">
+        <span class="logo-mark">◆</span>
+        <span class="logo-text">Tayyab<span class="dot-accent">.</span></span>
+      </a>
+      <nav class="nav__links" id="navLinks">
+        <a href="#home" class="active">Home</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#testimonials">Reviews</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a href="#contact" class="btn btn--primary nav__cta">Let's Talk <span class="ico">➤</span></a>
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Hero ===== -->
+    <section class="hero" id="home">
+      <div class="hero__grid">
+        <div class="hero__left">
+          <span class="hero__eyebrow">HELLO, I'M</span>
+          <h1 class="hero__name">Tayyab <span class="grad">Naeem</span></h1>
+          <p class="hero__role">Shopify &amp; AI Automation Developer</p>
+          <p class="hero__subtitle">
+            I build fast, beautiful Shopify stores and intelligent AI chatbots &amp;
+            automations that help brands sell more and work less.
+          </p>
+          <div class="hero__actions">
+            <a href="#portfolio" class="btn btn--primary">View My Work <span class="ico">➤</span></a>
+            <a href="#contact" class="btn btn--ghost">Download CV <span class="ico">⭳</span></a>
+          </div>
+          <div class="hero__trusted">
+            <span class="hero__trusted-label">Trusted by</span>
+            <div class="logos">
+              <span>Shopify</span><span>OpenAI</span><span>Claude</span><span>n8n</span><span>Make</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__right">
+          <div class="orbit">
+            <div class="orbit__ring orbit__ring--1"></div>
+            <div class="orbit__ring orbit__ring--2"></div>
+            <div class="orbit__dot orbit__dot--1"></div>
+            <div class="orbit__dot orbit__dot--2"></div>
+            <div class="hero__photo">
+              <img src="assets/profile.jpg" alt="Tayyab Naeem"
+                   onerror="this.style.display='none';this.parentElement.classList.add('no-img');" />
+              <span class="hero__photo-fallback">TN</span>
+            </div>
+          </div>
+          <div class="hero__exp">
+            <strong>3+</strong>
+            <span>Years of<br />Experience</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== About ===== -->
+    <section class="section" id="about">
+      <div class="about-card">
+        <div class="about-card__visual">
+          <div class="about-card__photo">
+            <img src="assets/profile.jpg" alt="Tayyab Naeem"
+                 onerror="this.style.display='none';this.parentElement.classList.add('no-img');" />
+            <span class="hero__photo-fallback">TN</span>
+          </div>
+          <span class="about-card__sign">Tayyab</span>
+        </div>
+        <div class="about-card__body">
+          <span class="eyebrow">ABOUT ME</span>
+          <h2>I Build Solutions,<br />That Make an <span class="grad">Impact.</span></h2>
+          <p>
+            I'm a passionate Shopify Developer, AI Chatbot Developer &amp; AI Automation Engineer
+            with a strong eye for detail and a focus on real business results — clean code,
+            thoughtful UX, and automation that quietly does the heavy lifting.
+          </p>
+          <div class="about-stats">
+            <div class="astat"><span class="astat__num" data-count="50">0</span><span class="astat__label">Projects Completed</span></div>
+            <div class="astat"><span class="astat__num" data-count="30">0</span><span class="astat__label">Happy Clients</span></div>
+            <div class="astat"><span class="astat__num" data-count="3">0</span><span class="astat__label">Years Experience</span></div>
+            <div class="astat"><span class="astat__num" data-count="15">0</span><span class="astat__label">Automations Built</span></div>
+          </div>
+          <a href="#contact" class="btn btn--primary">More About Me <span class="ico">➤</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Services ===== -->
+    <section class="section" id="services">
+      <div class="section__head section__head--left">
+        <span class="eyebrow">SERVICES</span>
+        <h2>What I Do <span class="grad">Best.</span></h2>
+      </div>
+      <div class="services">
+        <article class="svc">
+          <div class="svc__icon">🛍️</div>
+          <h3>Shopify Development</h3>
+          <p>Custom themes, Liquid, headless builds &amp; speed optimization that convert.</p>
+        </article>
+        <article class="svc">
+          <div class="svc__icon">🤖</div>
+          <h3>AI Chatbot Development</h3>
+          <p>LLM-powered support &amp; sales bots with RAG over your own data.</p>
+        </article>
+        <article class="svc">
+          <div class="svc__icon">⚙️</div>
+          <h3>AI Automation</h3>
+          <p>End-to-end workflows with n8n, Make &amp; APIs that remove manual work.</p>
+        </article>
+        <article class="svc">
+          <div class="svc__icon">🔗</div>
+          <h3>API Integrations</h3>
+          <p>Connecting apps, stores &amp; tools into one seamless system.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== Portfolio ===== -->
+    <section class="section" id="portfolio">
+      <div class="section__head section__head--split">
+        <div>
+          <span class="eyebrow">PORTFOLIO</span>
+          <h2>Featured Projects <span class="grad">Selected Work.</span></h2>
+        </div>
+        <a href="#contact" class="btn btn--ghost">View All Projects <span class="ico">➤</span></a>
+      </div>
+      <div class="work-grid">
+        <article class="work-card">
+          <div class="work-card__media" style="--accent:#ff7a18"><span>🛍️</span></div>
+          <div class="work-card__body">
+            <span class="work-card__tag">Shopify</span>
+            <h3>Fashion Store Rebuild</h3>
+            <p>Headless build — 60% faster, 32% more conversions.</p>
+          </div>
+        </article>
+        <article class="work-card">
+          <div class="work-card__media" style="--accent:#ff9d4d"><span>🤖</span></div>
+          <div class="work-card__body">
+            <span class="work-card__tag">AI Chatbot</span>
+            <h3>Support Copilot</h3>
+            <p>RAG bot resolving 70% of tickets on web &amp; WhatsApp.</p>
+          </div>
+        </article>
+        <article class="work-card">
+          <div class="work-card__media" style="--accent:#ffb066"><span>⚙️</span></div>
+          <div class="work-card__body">
+            <span class="work-card__tag">Automation</span>
+            <h3>Order Ops Pipeline</h3>
+            <p>Automated sync saving 15+ hours every week.</p>
+          </div>
+        </article>
+        <article class="work-card">
+          <div class="work-card__media" style="--accent:#ff6a3c"><span>📱</span></div>
+          <div class="work-card__body">
+            <span class="work-card__tag">Headless</span>
+            <h3>Storefront App</h3>
+            <p>Hydrogen storefront with a custom AI recommender.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== Testimonials ===== -->
+    <section class="section" id="testimonials">
+      <div class="section__head section__head--left">
+        <span class="eyebrow">TESTIMONIALS</span>
+        <h2>What Clients Say <span class="grad">About Me.</span></h2>
+      </div>
+      <div class="testi">
+        <span class="testi__quote">“</span>
+        <p class="testi__text">
+          Tayyab understood exactly what we needed and delivered a beautiful, fast store
+          plus an AI chatbot that cut our support load in half. Reliable, sharp, and a
+          pleasure to work with.
+        </p>
+        <div class="testi__author">
+          <div class="testi__avatar">JC</div>
+          <div>
+            <strong>James Carter</strong>
+            <span>CEO, TechVision</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA band ===== -->
+    <section class="cta-band">
+      <div class="cta-band__inner">
+        <div>
+          <span class="cta-band__icon">✦</span>
+          <h3>Have a project in mind?</h3>
+          <p>Let's work together and build something great!</p>
+        </div>
+        <a href="#contact" class="btn btn--primary btn--lg">Let's Talk <span class="ico">➤</span></a>
+      </div>
+    </section>
+
+    <!-- ===== Contact ===== -->
+    <section class="section contact" id="contact">
+      <div class="contact__card">
+        <span class="eyebrow">GET IN TOUCH</span>
+        <h2>Let's build something <span class="grad">that grows your business.</span></h2>
+        <p>Have a store to launch, a chatbot to build, or a workflow to automate? Let's talk.</p>
+        <form class="contact__form" id="contactForm" novalidate>
+          <div class="field">
+            <input type="text" id="name" name="name" placeholder=" " required />
+            <label for="name">Your Name</label>
+          </div>
+          <div class="field">
+            <input type="email" id="email" name="email" placeholder=" " required />
+            <label for="email">Your Email</label>
+          </div>
+          <div class="field field--full">
+            <textarea id="message" name="message" rows="4" placeholder=" " required></textarea>
+            <label for="message">Tell me about your project</label>
+          </div>
+          <button type="submit" class="btn btn--primary btn--full">Send Message <span class="ico">➤</span></button>
+          <p class="form-note" id="formNote" role="status"></p>
+        </form>
+        <div class="contact__direct">
+          <a href="mailto:commerceiwp@gmail.com">✉️ commerceiwp@gmail.com</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="#home" class="nav__logo"><span class="logo-mark">◆</span><span class="logo-text">Tayyab<span class="dot-accent">.</span></span></a>
+        <p>Designing and building digital experiences that drive results.</p>
+        <div class="footer__socials">
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="LinkedIn">IN</a>
+          <a href="#" aria-label="X">X</a>
+          <a href="#" aria-label="Instagram">IG</a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4>Quick Links</h4>
+        <a href="#home">Home</a><a href="#about">About</a><a href="#services">Services</a><a href="#portfolio">Portfolio</a>
+      </div>
+      <div class="footer__col">
+        <h4>Services</h4>
+        <a href="#services">Shopify Dev</a><a href="#services">AI Chatbots</a><a href="#services">Automation</a><a href="#services">Integrations</a>
+      </div>
+      <div class="footer__col footer__subscribe">
+        <h4>Subscribe</h4>
+        <p>Get occasional updates on my latest work.</p>
+        <form class="subscribe" onsubmit="return false;">
+          <input type="email" placeholder="Your email" aria-label="Email" />
+          <button class="btn btn--primary" type="submit">➤</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© <span id="year"></span> Tayyab Naeem. All rights reserved.</span>
+      <span>Built with care.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
