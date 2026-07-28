@@ -18,35 +18,37 @@ function Frame({ children }) {
 }
 
 /* ---------- 1. Shopify storefront ---------- */
-export function StoreMockup() {
+/** `accent` / `accent2` tint the hero banner so each store card reads distinctly. */
+export function StoreMockup({ accent = O, accent2 = O2, id = "s" }) {
+  const gid = `storeGrad-${id}`;
   return (
     <Frame>
       <rect x="24" y="18" width="272" height="144" rx="8" fill={PANEL} stroke={LINE} />
       {/* browser bar */}
       <path d="M24 26a8 8 0 0 1 8-8h256a8 8 0 0 1 8 8v10H24z" fill={PANEL2} />
-      <circle cx="36" cy="27" r="2.6" fill={O} opacity="0.8" />
+      <circle cx="36" cy="27" r="2.6" fill={accent} opacity="0.8" />
       <circle cx="45" cy="27" r="2.6" fill={TXT} />
       <circle cx="54" cy="27" r="2.6" fill={TXT} />
       <rect x="66" y="23.5" width="90" height="7" rx="3.5" fill="rgba(255,255,255,0.07)" />
       {/* hero banner */}
-      <rect x="34" y="46" width="252" height="42" rx="6" fill="url(#storeGrad)" />
+      <rect x="34" y="46" width="252" height="42" rx="6" fill={`url(#${gid})`} />
       <rect x="44" y="56" width="74" height="7" rx="3.5" fill="rgba(0,0,0,0.45)" />
       <rect x="44" y="69" width="50" height="5" rx="2.5" fill="rgba(0,0,0,0.3)" />
       <rect x="232" y="60" width="44" height="15" rx="7.5" fill="#131317" />
-      <rect x="242" y="66" width="24" height="4" rx="2" fill={O2} />
+      <rect x="242" y="66" width="24" height="4" rx="2" fill={accent2} />
       {/* product grid */}
       {[34, 120, 206].map((x, i) => (
         <g key={i}>
           <rect x={x} y="98" width="80" height="52" rx="6" fill={PANEL2} stroke={LINE} />
-          <rect x={x + 8} y="105" width="64" height="26" rx="4" fill="rgba(168,85,247,0.16)" />
+          <rect x={x + 8} y="105" width="64" height="26" rx="4" fill={accent} opacity="0.16" />
           <rect x={x + 8} y="136" width="42" height="4.5" rx="2.25" fill={TXT} />
-          <rect x={x + 8} y="144" width="24" height="4" rx="2" fill={O} opacity="0.75" />
+          <rect x={x + 8} y="144" width="24" height="4" rx="2" fill={accent} opacity="0.75" />
         </g>
       ))}
       <defs>
-        <linearGradient id="storeGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor={O} stopOpacity="0.85" />
-          <stop offset="100%" stopColor={O2} stopOpacity="0.45" />
+        <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={accent} stopOpacity="0.85" />
+          <stop offset="100%" stopColor={accent2} stopOpacity="0.45" />
         </linearGradient>
       </defs>
     </Frame>

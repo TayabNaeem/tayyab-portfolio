@@ -2,121 +2,137 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import Reveal from "./Reveal";
-import { StoreMockup, ChatMockup, FlowMockup, DashMockup } from "./Mockups";
+import { StoreMockup } from "./Mockups";
+import { ShopifyMark } from "./BrandLogos";
 
+// Live client stores. Descriptions reflect what each storefront actually sells.
 const PROJECTS = [
   {
-    Mockup: StoreMockup,
-    tag: "Shopify",
-    title: "Fashion Store Rebuild",
-    desc: "Rebuilt a slow, cluttered storefront as a fast headless Shopify experience with a redesigned PDP and checkout flow.",
-    stack: ["Hydrogen", "Liquid", "Tailwind"],
-    metrics: [
-      { v: "60%", l: "faster loads" },
-      { v: "+32%", l: "conversions" },
-    ],
+    id: "soundskins",
+    name: "SoundSkins Global",
+    url: "https://soundskinsglobal.com",
+    tag: "Automotive",
+    desc: "Shopify storefront for a car acoustic-insulation brand — organised by product series with vehicle-specific pre-cut kits.",
+    stack: ["Shopify", "Liquid", "CRO"],
+    accent: "#a855f7",
+    accent2: "#6d28d9",
   },
   {
-    Mockup: ChatMockup,
-    tag: "AI Chatbot",
-    title: "Support Copilot",
-    desc: "A RAG-powered assistant trained on product docs and order data, answering across web chat and WhatsApp.",
-    stack: ["OpenAI", "RAG", "WhatsApp API"],
-    metrics: [
-      { v: "70%", l: "tickets auto-solved" },
-      { v: "24/7", l: "coverage" },
-    ],
+    id: "cybex",
+    name: "Cybex",
+    url: "https://cybex.shopping/",
+    tag: "Activewear",
+    desc: "Premium activewear store for men and women covering tracksuits, hoodies, leggings and training accessories.",
+    stack: ["Shopify", "Custom Theme", "Speed"],
+    accent: "#8b5cf6",
+    accent2: "#4f46e5",
   },
   {
-    Mockup: FlowMockup,
-    tag: "Automation",
-    title: "Order Ops Pipeline",
-    desc: "An end-to-end workflow syncing orders, invoices, inventory and Slack alerts with zero manual entry.",
-    stack: ["n8n", "Node.js", "Webhooks"],
-    metrics: [
-      { v: "15h", l: "saved weekly" },
-      { v: "0", l: "manual entry" },
-    ],
+    id: "roohi",
+    name: "ROOHI",
+    url: "https://roohiapparel.com",
+    tag: "Apparel",
+    desc: "Culturally-inspired apparel brand selling graphic tees and embroidered two-piece sets.",
+    stack: ["Shopify", "Liquid", "Branding"],
+    accent: "#c084fc",
+    accent2: "#7c3aed",
   },
   {
-    Mockup: DashMockup,
-    tag: "AI + Data",
-    title: "Revenue Insights Bot",
-    desc: "An AI reporting agent that reads store analytics and posts a plain-English performance digest every morning.",
-    stack: ["Python", "Claude", "Shopify API"],
-    metrics: [
-      { v: "Daily", l: "auto reports" },
-      { v: "12+", l: "data sources" },
-    ],
+    id: "elite",
+    name: "Elite Auto Gears",
+    url: "https://eliteautogears.com",
+    tag: "Automotive",
+    desc: "Shopify storefront built for an automotive gear and accessories retailer.",
+    stack: ["Shopify", "Liquid"],
+    accent: "#7c3aed",
+    accent2: "#a855f7",
+  },
+  {
+    id: "rela",
+    name: "RELA",
+    url: "https://liverela.com",
+    tag: "Pre-launch",
+    desc: "Shopify build for a new brand, currently in pre-launch behind a coming-soon page.",
+    stack: ["Shopify", "Theme Setup"],
+    accent: "#6d28d9",
+    accent2: "#8b5cf6",
   },
 ];
 
 export default function Portfolio({ hideHeading = false, limit }) {
   const shown = limit ? PROJECTS.slice(0, limit) : PROJECTS;
+
   return (
     <section id="portfolio" className={`shell ${hideHeading ? "pb-24" : "py-24"}`}>
       {!hideHeading && (
-        <Reveal className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-12">
+        <Reveal className="mb-12 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <span className="eyebrow">PORTFOLIO</span>
             <h2 className="text-[clamp(1.8rem,4vw,2.7rem)]">
-              Featured Projects <span className="grad-text">Selected Work.</span>
+              Shopify stores <span className="grad-text">I&apos;ve built.</span>
             </h2>
           </div>
           <Link href="/work" className="btn btn-ghost self-start sm:self-auto">
-            View All Work <span className="text-[0.78rem]">➤</span>
+            View All Work <ArrowUpRight size={15} strokeWidth={2.2} />
           </Link>
         </Reveal>
       )}
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {shown.map((p, i) => (
-          <Reveal key={p.title} delay={i * 0.08}>
-            <motion.article
+          <Reveal key={p.id} delay={(i % 3) * 0.08}>
+            <motion.a
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ y: -8 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="group h-full flex flex-col overflow-hidden rounded-[20px] border bg-surface hover:border-brand/50 hover:shadow-soft transition-colors"
+              className="group flex h-full flex-col overflow-hidden rounded-[20px] border bg-surface transition-colors hover:border-brand/50 hover:shadow-soft"
               style={{ borderColor: "var(--border)" }}
             >
-              {/* mockup */}
+              {/* preview */}
               <div className="relative h-[190px] overflow-hidden border-b" style={{ borderColor: "var(--border)" }}>
                 <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.04]">
-                  <p.Mockup />
+                  <StoreMockup accent={p.accent} accent2={p.accent2} id={p.id} />
                 </div>
-                <span className="absolute top-3.5 left-3.5 rounded-full border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-wider text-brand backdrop-blur-md bg-[#131317b3]"
-                      style={{ borderColor: "var(--border-2)" }}>
+                <span
+                  className="absolute left-3.5 top-3.5 flex items-center gap-1.5 rounded-full border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-wider text-white backdrop-blur-md"
+                  style={{ borderColor: "var(--border-2)", background: "#131317b3" }}
+                >
+                  <ShopifyMark className="h-3.5 w-3.5" />
                   {p.tag}
+                </span>
+                <span
+                  className="absolute right-3.5 top-3.5 grid h-8 w-8 place-items-center rounded-full border text-white opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100"
+                  style={{ borderColor: "var(--border-2)", background: "#131317b3" }}
+                >
+                  <ArrowUpRight size={15} strokeWidth={2.2} />
                 </span>
               </div>
 
               {/* body */}
               <div className="flex flex-1 flex-col p-6">
-                <h3 className="text-[1.2rem] mb-2">{p.title}</h3>
-                <p className="text-dim text-[0.9rem] mb-5">{p.desc}</p>
+                <h3 className="mb-1.5 text-[1.2rem]">{p.name}</h3>
+                <span className="mb-3 text-[0.82rem] text-brand">
+                  {p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                </span>
+                <p className="mb-5 text-[0.9rem] text-dim">{p.desc}</p>
 
-                {/* metrics */}
-                <div className="flex gap-6 mb-5">
-                  {p.metrics.map((m) => (
-                    <div key={m.l}>
-                      <div className="font-display text-[1.4rem] font-bold text-brand leading-none">{m.v}</div>
-                      <div className="text-[0.72rem] text-mute mt-1">{m.l}</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* stack chips */}
                 <div className="mt-auto flex flex-wrap gap-2">
                   {p.stack.map((t) => (
-                    <span key={t}
-                          className="rounded-lg border bg-surface-2 px-2.5 py-1 text-[0.74rem] text-dim"
-                          style={{ borderColor: "var(--border)" }}>
+                    <span
+                      key={t}
+                      className="rounded-lg border bg-surface-2 px-2.5 py-1 text-[0.74rem] text-dim"
+                      style={{ borderColor: "var(--border)" }}
+                    >
                       {t}
                     </span>
                   ))}
                 </div>
               </div>
-            </motion.article>
+            </motion.a>
           </Reveal>
         ))}
       </div>

@@ -9,7 +9,7 @@ export default function Home() {
     <PageTransition>
       <Hero />
       <Services />
-      <Portfolio limit={2} />
+      <Portfolio limit={3} />
       <CTA />
     </PageTransition>
   );
