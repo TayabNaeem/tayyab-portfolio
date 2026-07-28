@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Mail, Phone, MessageCircle, MapPin, Clock,
-  Check, ArrowRight, ArrowLeft, Send,
-} from "lucide-react";
+import { Mail, Phone, Check, ArrowRight, ArrowLeft, Send } from "lucide-react";
 
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -20,6 +17,11 @@ const LinkedinIcon = (p) => (
 const GithubIcon = (p) => (
   <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17" {...p}>
     <path d="M12 1.7a10.3 10.3 0 0 0-3.26 20.07c.52.1.71-.22.71-.5v-1.75c-2.87.63-3.48-1.38-3.48-1.38-.47-1.2-1.15-1.52-1.15-1.52-.94-.64.07-.63.07-.63 1.04.07 1.58 1.07 1.58 1.07.92 1.58 2.42 1.12 3.01.86.09-.67.36-1.12.66-1.38-2.29-.26-4.7-1.15-4.7-5.1 0-1.13.4-2.05 1.06-2.77-.1-.26-.46-1.31.1-2.73 0 0 .87-.28 2.85 1.06a9.8 9.8 0 0 1 5.18 0c1.98-1.34 2.85-1.06 2.85-1.06.56 1.42.21 2.47.1 2.73.66.72 1.06 1.64 1.06 2.77 0 3.96-2.42 4.83-4.72 5.09.37.32.7.95.7 1.92v2.85c0 .28.19.61.72.5A10.3 10.3 0 0 0 12 1.7z" />
+  </svg>
+);
+const WhatsappIcon = (p) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17" {...p}>
+    <path d="M12 2a9.9 9.9 0 0 0-8.4 15.2L2 22.5l5.4-1.6A9.9 9.9 0 1 0 12 2zm0 18.1a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3.1.9.9-3-.2-.3A8.2 8.2 0 1 1 12 20.1zm4.5-6.1c-.25-.13-1.46-.72-1.69-.8-.23-.09-.39-.13-.56.12s-.64.8-.79.97-.29.19-.54.06a6.7 6.7 0 0 1-2-1.23 7.4 7.4 0 0 1-1.36-1.7c-.14-.24 0-.37.11-.5l.37-.43c.12-.14.16-.24.25-.4a.45.45 0 0 0 0-.43c-.07-.13-.56-1.35-.77-1.84s-.4-.43-.56-.44h-.48a.92.92 0 0 0-.67.31 2.8 2.8 0 0 0-.87 2.08 4.85 4.85 0 0 0 1.02 2.58 11.1 11.1 0 0 0 4.27 3.77 14.4 14.4 0 0 0 1.43.53 3.43 3.43 0 0 0 1.58.1 2.58 2.58 0 0 0 1.69-1.19 2.1 2.1 0 0 0 .14-1.19c-.06-.1-.22-.16-.47-.28z" />
   </svg>
 );
 
@@ -44,15 +46,12 @@ const TIMELINES = ["ASAP", "2–4 weeks", "1–3 months", "Flexible"];
 const DETAILS = [
   { Icon: Mail, label: "Email", value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
   { Icon: Phone, label: "Phone", value: CONTACT_PHONE_DISPLAY, href: `tel:${CONTACT_PHONE_E164}` },
-  {
-    Icon: MessageCircle,
-    label: "WhatsApp",
-    value: "Chat with me directly",
-    href: `https://wa.me/${CONTACT_PHONE_E164.replace("+", "")}`,
-    external: true,
-  },
-  { Icon: MapPin, label: "Location", value: "Pakistan · Working worldwide" },
-  { Icon: Clock, label: "Response time", value: "Usually within 24 hours" },
+];
+
+const SOCIALS = [
+  { Icon: WhatsappIcon, label: "WhatsApp", href: `https://wa.me/${CONTACT_PHONE_E164.replace("+", "")}` },
+  { Icon: LinkedinIcon, label: "LinkedIn", href: LINKEDIN },
+  { Icon: GithubIcon, label: "GitHub", href: "#" },
 ];
 
 const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -173,25 +172,21 @@ function ContactInfo() {
       </ul>
 
       <div className="mt-8 flex items-center gap-3">
-        <span className="text-[0.8rem] text-mute">Follow</span>
-        <a
-          href={LINKEDIN}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="LinkedIn"
-          className="grid h-10 w-10 place-items-center rounded-xl border bg-surface text-dim transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand"
-          style={{ borderColor: "var(--border)" }}
-        >
-          <LinkedinIcon />
-        </a>
-        <a
-          href="#"
-          aria-label="GitHub"
-          className="grid h-10 w-10 place-items-center rounded-xl border bg-surface text-dim transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand"
-          style={{ borderColor: "var(--border)" }}
-        >
-          <GithubIcon />
-        </a>
+        <span className="text-[0.8rem] text-mute">Find me on</span>
+        {SOCIALS.map(({ Icon, label, href }) => (
+          <a
+            key={label}
+            href={href}
+            title={label}
+            aria-label={label}
+            target={href.startsWith("http") ? "_blank" : undefined}
+            rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+            className="grid h-11 w-11 place-items-center rounded-xl border bg-surface text-dim transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+            style={{ borderColor: "var(--border)" }}
+          >
+            <Icon />
+          </a>
+        ))}
       </div>
     </div>
   );
