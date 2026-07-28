@@ -77,8 +77,11 @@ export default function Footer() {
           <p className="mb-3.5 text-[0.88rem] text-dim">
             Have a project in mind? Let&apos;s talk about it.
           </p>
-          <a href="mailto:commerceiwp@gmail.com" className="block text-[0.9rem] text-dim transition-colors hover:text-brand-light">
-            ✉️ commerceiwp@gmail.com
+          <a href="mailto:naemtayb@gmail.com" className="block text-[0.9rem] text-dim transition-colors hover:text-brand-light">
+            ✉️ naemtayb@gmail.com
+          </a>
+          <a href="tel:+923364103354" className="mt-1 block text-[0.9rem] text-dim transition-colors hover:text-brand-light">
+            📞 +92 336 4103354
           </a>
           <Link href="/contact" className="btn btn-primary mt-4">
             Start a Project <span className="text-[0.78rem]">➤</span>

@@ -12,11 +12,11 @@ const TOOL_LOGOS = [
   N8nLogo, MakeLogo, ZapierLogo, ZohoLogo,
 ];
 
-// Floating platform badges that orbit the portrait (real brand marks)
+// Floating platform logos that orbit the portrait — logo only, large
 const BADGES = [
-  { Mark: ShopifyMark, label: "Shopify", pos: { top: "4%", left: "-6%" }, z: 30, d: 5 },
-  { Mark: BotpressMark, label: "AI Chatbot", pos: { bottom: "28%", right: "-8%" }, z: 30, d: 6.2 },
-  { Mark: N8nMark, label: "Automation", pos: { bottom: "2%", left: "-4%" }, z: 30, d: 7 },
+  { Mark: ShopifyMark, label: "Shopify", pos: { top: "3%", left: "-7%" }, z: 30, d: 5 },
+  { Mark: BotpressMark, label: "Botpress", pos: { bottom: "30%", right: "-9%" }, z: 30, d: 6.2 },
+  { Mark: N8nMark, label: "n8n", pos: { bottom: "1%", left: "-5%" }, z: 30, d: 7, wide: true },
 ];
 
 const container = {
@@ -159,7 +159,7 @@ export default function Hero() {
           {BADGES.map((b, i) => (
             <motion.div
               key={b.label}
-              className="absolute flex items-center gap-2 rounded-2xl border px-3.5 py-2.5 backdrop-blur-md"
+              className="absolute grid place-items-center rounded-2xl border p-3.5 backdrop-blur-md"
               style={{
                 ...b.pos,
                 zIndex: b.z,
@@ -175,13 +175,8 @@ export default function Hero() {
                 y: { duration: b.d, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 },
               }}
             >
-              <span
-                className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border"
-                style={{ borderColor: "var(--border)", background: "rgba(255,255,255,0.05)" }}
-              >
-                <b.Mark className="h-5 w-5" />
-              </span>
-              <span className="whitespace-nowrap text-[0.82rem] font-medium text-dim">{b.label}</span>
+              <b.Mark className={b.wide ? "h-9 w-auto" : "h-9 w-9"} />
+              <span className="sr-only">{b.label}</span>
             </motion.div>
           ))}
 

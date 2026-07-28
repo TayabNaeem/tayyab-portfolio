@@ -125,34 +125,53 @@ export function VoiceflowLogo({ className = "h-6" }) {
 }
 
 /* ============ Vapi ============ */
-const VAPI = "#5DFECA";
+export function VapiMark({ className = "w-5 h-5" }) {
+  return (
+    <svg viewBox="0 0 26 22" className={className}>
+      {/* flowing ribbon / wave mark */}
+      <path
+        fill="#fff"
+        d="M2.6 3.4c0-1.4 1.3-2 2.3-1.2l6.4 5.4c.6.5 1.5.4 2-.2l3.9-4.5c.9-1 2.6-.4 2.6 1V18c0 1.4-1.3 2.1-2.3 1.2l-6.4-5.4a1.4 1.4 0 0 0-2 .2l-3.9 4.5c-.9 1-2.6.4-2.6-1z"
+      />
+    </svg>
+  );
+}
 
 export function VapiLogo({ className = "h-6" }) {
   return (
-    <svg viewBox="0 0 76 24" className={className}>
-      <g fill={VAPI}>
-        <rect x="1" y="9" width="3" height="7" rx="1.5" opacity="0.5" />
-        <rect x="6.5" y="5.5" width="3" height="14" rx="1.5" opacity="0.75" />
-        <rect x="12" y="2.5" width="3" height="20" rx="1.5" />
-        <rect x="17.5" y="6.5" width="3" height="12" rx="1.5" opacity="0.75" />
-        <rect x="23" y="10" width="3" height="5" rx="1.5" opacity="0.5" />
+    <svg viewBox="0 0 84 24" className={className}>
+      <g transform="translate(0,1) scale(0.86)">
+        <path
+          fill="#fff"
+          d="M2.6 3.4c0-1.4 1.3-2 2.3-1.2l6.4 5.4c.6.5 1.5.4 2-.2l3.9-4.5c.9-1 2.6-.4 2.6 1V18c0 1.4-1.3 2.1-2.3 1.2l-6.4-5.4a1.4 1.4 0 0 0-2 .2l-3.9 4.5c-.9 1-2.6.4-2.6-1z"
+        />
       </g>
-      <text x="31" y="17.5" fontSize="15" fill={VAPI} {...WORD}>Vapi</text>
+      <text x="22" y="18" fontSize="17" fill="#fff" {...WORD}>vapi</text>
     </svg>
   );
 }
 
 /* ============ Make.com ============ */
-const MAKE = "#6D00CC";
+export function MakeMark({ className = "w-5 h-5" }) {
+  return (
+    <svg viewBox="0 0 26 22" className={className}>
+      {/* four leaning bars, magenta -> deep purple */}
+      <path d="M1.4 19.4 4.9 2.6h3.9L5.3 19.4z" fill="#F213D6" />
+      <path d="M9 19.4 11.2 2.6h3.9L12.9 19.4z" fill="#A322E8" />
+      <path d="M16.6 19.4V2.6h3.9v16.8z" fill="#6D00CC" />
+    </svg>
+  );
+}
 
 export function MakeLogo({ className = "h-6" }) {
   return (
-    <svg viewBox="0 0 86 24" className={className}>
-      <g fill={MAKE}>
-        <path d="M2 5.5h3.2l2.4 8 2.4-8h3.2v13H10V10l-2 8H6.4l-2-8v8.5H2z" />
-        <circle cx="18" cy="12" r="3.4" />
+    <svg viewBox="0 0 92 24" className={className}>
+      <g transform="translate(0,1) scale(0.9)">
+        <path d="M1.4 19.4 4.9 2.6h3.9L5.3 19.4z" fill="#F213D6" />
+        <path d="M9 19.4 11.2 2.6h3.9L12.9 19.4z" fill="#A322E8" />
+        <path d="M16.6 19.4V2.6h3.9v16.8z" fill="#6D00CC" />
       </g>
-      <text x="26" y="17.5" fontSize="15" fill={MAKE} {...WORD}>Make</text>
+      <text x="25" y="19" fontSize="18" fill="#fff" {...WORD}>make</text>
     </svg>
   );
 }
@@ -172,17 +191,43 @@ export function ZapierLogo({ className = "h-6" }) {
 }
 
 /* ============ Zoho ============ */
+/** Four interlocking rounded squares, alternating tilt. */
+function ZohoSquares({ scale = 1 }) {
+  const sq = [
+    { x: 1, y: 5, c: "#E42527", r: -10 },
+    { x: 11.5, y: 3.5, c: "#089949", r: 10 },
+    { x: 22, y: 5, c: "#226DB4", r: -10 },
+    { x: 32.5, y: 3.5, c: "#F9B21D", r: 10 },
+  ];
+  return (
+    <g fill="none" strokeWidth={2.6} transform={`scale(${scale})`}>
+      {sq.map((s, i) => (
+        <rect
+          key={i}
+          x={s.x} y={s.y} width="13" height="13" rx="4.2"
+          stroke={s.c}
+          transform={`rotate(${s.r} ${s.x + 6.5} ${s.y + 6.5})`}
+        />
+      ))}
+    </g>
+  );
+}
+
+export function ZohoMark({ className = "w-5 h-5" }) {
+  return (
+    <svg viewBox="0 0 47 22" className={className}>
+      <ZohoSquares />
+    </svg>
+  );
+}
+
 export function ZohoLogo({ className = "h-6" }) {
   return (
-    <svg viewBox="0 0 88 24" className={className}>
-      {/* four colour bars, echoing Zoho's brand palette */}
-      <g>
-        <rect x="1" y="6" width="4.5" height="13" rx="1.4" fill="#E42527" />
-        <rect x="7" y="6" width="4.5" height="13" rx="1.4" fill="#F9B21D" />
-        <rect x="13" y="6" width="4.5" height="13" rx="1.4" fill="#089949" />
-        <rect x="19" y="6" width="4.5" height="13" rx="1.4" fill="#226DB4" />
+    <svg viewBox="0 0 110 24" className={className}>
+      <g transform="translate(0,1) scale(0.88)">
+        <ZohoSquares />
       </g>
-      <text x="28" y="17.5" fontSize="15" fill="#f4f4f5" {...WORD}>Zoho</text>
+      <text x="49" y="18" fontSize="14" fill="#f4f4f5" letterSpacing="2.5" {...WORD}>ZOHO</text>
     </svg>
   );
 }
