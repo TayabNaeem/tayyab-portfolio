@@ -13,9 +13,9 @@ module.exports = {
         "surface-2": "#1c1c20",
         "surface-3": "#232329",
         brand: {
-          DEFAULT: "#ff7a18",
-          light: "#ff9d4d",
-          deep: "#ff5c2b",
+          DEFAULT: "#a855f7",
+          light: "#c084fc",
+          deep: "#7c3aed",
         },
         dim: "#a6a6ad",
         mute: "#6e6e77",
@@ -26,12 +26,12 @@ module.exports = {
       },
       boxShadow: {
         soft: "0 24px 70px -24px rgba(0,0,0,0.8)",
-        glow: "0 10px 40px -8px rgba(255,122,24,0.45)",
-        "glow-lg": "0 30px 80px -24px rgba(255,122,24,0.5)",
+        glow: "0 10px 40px -8px rgba(168,85,247,0.45)",
+        "glow-lg": "0 30px 80px -24px rgba(168,85,247,0.5)",
       },
       backgroundImage: {
-        grad: "linear-gradient(115deg, #ff7a18 0%, #ff9d4d 100%)",
-        "grad-h": "linear-gradient(115deg, #ff6a00 0%, #ff8a3c 60%, #ff5c2b 100%)",
+        grad: "linear-gradient(115deg, #a855f7 0%, #6d28d9 100%)",
+        "grad-h": "linear-gradient(115deg, #a855f7 0%, #8b5cf6 60%, #7c3aed 100%)",
       },
       keyframes: {
         spin: { to: { transform: "rotate(360deg)" } },

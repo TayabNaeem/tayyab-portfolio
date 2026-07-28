@@ -1,5 +1,8 @@
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
+import Background from "@/components/Background";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -16,7 +19,10 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Tayyab Naeem — Shopify & AI Automation Developer",
+  title: {
+    default: "Tayyab Naeem — Shopify & AI Automation Developer",
+    template: "%s · Tayyab Naeem",
+  },
   description:
     "Tayyab Naeem — Shopify Developer, AI Chatbot Developer & AI Automation Engineer building high-converting stores and intelligent automation.",
 };
@@ -24,7 +30,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
-      <body>{children}</body>
+      <body>
+        <Background />
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

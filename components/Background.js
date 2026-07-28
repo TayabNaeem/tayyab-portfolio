@@ -1,21 +1,39 @@
+// Plain background: deep black with soft ambient light. No grid / block pattern.
 export default function Background() {
   return (
     <>
+      {/* base wash */}
       <div
         aria-hidden
         className="fixed inset-0 -z-20"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)",
-          backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(circle at 50% 0%, #000 0%, transparent 78%)",
-          WebkitMaskImage: "radial-gradient(circle at 50% 0%, #000 0%, transparent 78%)",
+          background:
+            "radial-gradient(120% 80% at 50% -10%, #17110c 0%, #0c0b0d 45%, #0a0a0b 100%)",
         }}
       />
-      <div aria-hidden className="fixed -z-10 rounded-full pointer-events-none"
-           style={{ width: 520, height: 520, top: -200, right: -120, background: "#ff7a18", filter: "blur(130px)", opacity: 0.28 }} />
-      <div aria-hidden className="fixed -z-10 rounded-full pointer-events-none"
-           style={{ width: 460, height: 460, top: "45%", left: -180, background: "#ff5c2b", filter: "blur(130px)", opacity: 0.16 }} />
+      {/* ambient glows */}
+      <div
+        aria-hidden
+        className="fixed -z-10 rounded-full pointer-events-none"
+        style={{
+          width: 700, height: 700, top: -320, right: -220,
+          background: "#a855f7", filter: "blur(180px)", opacity: 0.2,
+        }}
+      />
+      <div
+        aria-hidden
+        className="fixed -z-10 rounded-full pointer-events-none"
+        style={{
+          width: 620, height: 620, top: "55%", left: -280,
+          background: "#7c3aed", filter: "blur(190px)", opacity: 0.12,
+        }}
+      />
+      {/* subtle vignette to keep edges dark */}
+      <div
+        aria-hidden
+        className="fixed inset-0 -z-10 pointer-events-none"
+        style={{ background: "radial-gradient(100% 70% at 50% 40%, transparent 40%, rgba(0,0,0,0.55) 100%)" }}
+      />
     </>
   );
 }

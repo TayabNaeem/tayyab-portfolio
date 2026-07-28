@@ -14,7 +14,7 @@ const STATS = [
 
 export default function About() {
   return (
-    <section id="about" className="max-w-[1160px] mx-auto px-5 sm:px-8 md:px-12 py-24">
+    <section id="about" className="shell py-24">
       <Reveal>
         <div className="grid md:grid-cols-[340px_1fr] gap-12 items-center rounded-[28px] border p-7 sm:p-10 md:p-[50px] bg-gradient-to-br from-surface-2 to-surface"
              style={{ borderColor: "var(--border)" }}>
@@ -52,7 +52,7 @@ export default function About() {
               ))}
             </div>
 
-            <motion.a whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }} href="#contact" className="btn btn-primary">
+            <motion.a whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }} href="/contact" className="btn btn-primary">
               More About Me <span className="text-[0.78rem]">➤</span>
             </motion.a>
           </div>
