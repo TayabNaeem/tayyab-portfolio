@@ -2,25 +2,58 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import {
+  Mail, Phone, MessageCircle, MapPin, Clock,
+  Check, ArrowRight, ArrowLeft, Send,
+} from "lucide-react";
+
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import Reveal from "./Reveal";
 
+/* lucide v1 dropped brand marks, so these two are inline */
+const LinkedinIcon = (p) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17" {...p}>
+    <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05a4.2 4.2 0 0 1 3.75-2C20.4 8.7 22 11 22 14.6V21h-4v-5.7c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3.1V21H9z" />
+  </svg>
+);
+const GithubIcon = (p) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17" {...p}>
+    <path d="M12 1.7a10.3 10.3 0 0 0-3.26 20.07c.52.1.71-.22.71-.5v-1.75c-2.87.63-3.48-1.38-3.48-1.38-.47-1.2-1.15-1.52-1.15-1.52-.94-.64.07-.63.07-.63 1.04.07 1.58 1.07 1.58 1.07.92 1.58 2.42 1.12 3.01.86.09-.67.36-1.12.66-1.38-2.29-.26-4.7-1.15-4.7-5.1 0-1.13.4-2.05 1.06-2.77-.1-.26-.46-1.31.1-2.73 0 0 .87-.28 2.85 1.06a9.8 9.8 0 0 1 5.18 0c1.98-1.34 2.85-1.06 2.85-1.06.56 1.42.21 2.47.1 2.73.66.72 1.06 1.64 1.06 2.77 0 3.96-2.42 4.83-4.72 5.09.37.32.7.95.7 1.92v2.85c0 .28.19.61.72.5A10.3 10.3 0 0 0 12 1.7z" />
+  </svg>
+);
+
 export const CONTACT_EMAIL = "naemtayb@gmail.com";
 export const CONTACT_PHONE_DISPLAY = "+92 336 4103354";
 export const CONTACT_PHONE_E164 = "+923364103354";
+const LINKEDIN = "https://www.linkedin.com/in/tayyab-naeem-54b011391/";
 
 const STEPS = ["About you", "Project", "Details"];
 
 const SERVICES = [
   "Shopify Development",
+  "Website Development",
   "AI Chatbot",
   "AI Automation",
-  "API Integration",
+  "CRM Management",
   "Something else",
 ];
 const BUDGETS = ["< $500", "$500 – $1k", "$1k – $5k", "$5k+"];
 const TIMELINES = ["ASAP", "2–4 weeks", "1–3 months", "Flexible"];
+
+const DETAILS = [
+  { Icon: Mail, label: "Email", value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+  { Icon: Phone, label: "Phone", value: CONTACT_PHONE_DISPLAY, href: `tel:${CONTACT_PHONE_E164}` },
+  {
+    Icon: MessageCircle,
+    label: "WhatsApp",
+    value: "Chat with me directly",
+    href: `https://wa.me/${CONTACT_PHONE_E164.replace("+", "")}`,
+    external: true,
+  },
+  { Icon: MapPin, label: "Location", value: "Pakistan · Working worldwide" },
+  { Icon: Clock, label: "Response time", value: "Usually within 24 hours" },
+];
 
 const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
@@ -29,13 +62,16 @@ const EMPTY = {
   service: "", budget: "", timeline: "", message: "",
 };
 
-/* ---------- small building blocks ---------- */
+/* ---------- building blocks ---------- */
 
 function Field({ label, optional, children }) {
   return (
     <label className="block">
       <span className="mb-2 block text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-mute">
-        {label} {optional && <span className="font-normal normal-case tracking-normal text-mute/70">(optional)</span>}
+        {label}{" "}
+        {optional && (
+          <span className="font-normal normal-case tracking-normal text-mute/70">(optional)</span>
+        )}
       </span>
       {children}
     </label>
@@ -52,7 +88,7 @@ function Input(props) {
   );
 }
 
-function ChipGroup({ options, value, onChange, name }) {
+function ChipGroup({ options, value, onChange }) {
   return (
     <div className="flex flex-wrap gap-2.5">
       {options.map((o) => {
@@ -74,6 +110,89 @@ function ChipGroup({ options, value, onChange, name }) {
           </button>
         );
       })}
+    </div>
+  );
+}
+
+/* ---------- left column ---------- */
+
+function ContactInfo() {
+  return (
+    <div className="lg:sticky lg:top-32">
+      <span className="eyebrow">CONTACT DETAILS</span>
+      <h3 className="mb-4 text-[clamp(1.5rem,2.6vw,2rem)]">
+        Let&apos;s start a <span className="grad-text">conversation.</span>
+      </h3>
+      <p className="mb-9 max-w-[380px] text-[0.95rem] text-dim">
+        Prefer to reach out directly? Use any of the channels below — or fill in the form and
+        I&apos;ll come back to you with a plan.
+      </p>
+
+      <ul className="space-y-3">
+        {DETAILS.map(({ Icon, label, value, href, external }) => {
+          const inner = (
+            <>
+              <span
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border bg-surface-2 text-brand transition-colors group-hover:border-brand group-hover:bg-brand/10"
+                style={{ borderColor: "var(--border)" }}
+              >
+                <Icon size={19} strokeWidth={1.8} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-mute">
+                  {label}
+                </span>
+                <span className="block truncate text-[0.95rem] text-[#f4f4f5]">{value}</span>
+              </span>
+            </>
+          );
+
+          return (
+            <li key={label}>
+              {href ? (
+                <a
+                  href={href}
+                  target={external ? "_blank" : undefined}
+                  rel={external ? "noopener noreferrer" : undefined}
+                  className="group flex items-center gap-4 rounded-2xl border p-3.5 transition-colors hover:border-brand/40 hover:bg-surface-2/60"
+                  style={{ borderColor: "var(--border)" }}
+                >
+                  {inner}
+                </a>
+              ) : (
+                <div
+                  className="group flex items-center gap-4 rounded-2xl border p-3.5"
+                  style={{ borderColor: "var(--border)" }}
+                >
+                  {inner}
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="mt-8 flex items-center gap-3">
+        <span className="text-[0.8rem] text-mute">Follow</span>
+        <a
+          href={LINKEDIN}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
+          className="grid h-10 w-10 place-items-center rounded-xl border bg-surface text-dim transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+          style={{ borderColor: "var(--border)" }}
+        >
+          <LinkedinIcon />
+        </a>
+        <a
+          href="#"
+          aria-label="GitHub"
+          className="grid h-10 w-10 place-items-center rounded-xl border bg-surface text-dim transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+          style={{ borderColor: "var(--border)" }}
+        >
+          <GithubIcon />
+        </a>
+      </div>
     </div>
   );
 }
@@ -100,7 +219,10 @@ export default function Contact({ hideHeading = false }) {
     setStep((s) => Math.min(s + 1, STEPS.length - 1));
   };
 
-  const back = () => { setErr(""); setStep((s) => Math.max(s - 1, 0)); };
+  const back = () => {
+    setErr("");
+    setStep((s) => Math.max(s - 1, 0));
+  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -130,71 +252,93 @@ export default function Contact({ hideHeading = false }) {
   };
 
   return (
-    <section id="contact" className="shell max-w-[980px] py-24">
+    <section id="contact" className="shell py-24">
       <Reveal>
-        <div
-          className="rounded-[26px] border p-6 shadow-soft sm:p-10 md:p-12"
-          style={{ borderColor: "var(--border-2)", background: "linear-gradient(160deg,#1c1c20,#151517)" }}
-        >
-          {!hideHeading && (
-            <div className="mb-10 text-center">
-              <span className="eyebrow">GET IN TOUCH</span>
-              <h2 className="text-[clamp(1.8rem,4vw,2.7rem)]">
-                Let&apos;s build something <span className="grad-text">that grows your business.</span>
-              </h2>
-            </div>
-          )}
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+          {/* LEFT — details */}
+          <ContactInfo />
 
-          {done ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="py-10 text-center"
-            >
-              <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-full bg-grad">
-                <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="#0a0a0b" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12.5l4.5 4.5L19 7" />
-                </svg>
+          {/* RIGHT — form */}
+          <div
+            className="rounded-[26px] border p-6 shadow-soft sm:p-9"
+            style={{
+              borderColor: "var(--border-2)",
+              background: "linear-gradient(160deg,#1c1c20,#151517)",
+            }}
+          >
+            {!hideHeading && (
+              <div className="mb-8">
+                <span className="eyebrow">GET IN TOUCH</span>
+                <h2 className="text-[clamp(1.6rem,3vw,2.2rem)]">
+                  Tell me about <span className="grad-text">your project.</span>
+                </h2>
               </div>
-              <h3 className="mb-2 text-[1.5rem]">Message sent!</h3>
-              <p className="text-dim">Thanks {"—"} I&apos;ll get back to you within a day.</p>
-              <button onClick={() => { setDone(false); setStep(0); }} className="btn btn-ghost mt-7">
-                Send another
-              </button>
-            </motion.div>
-          ) : (
-            <>
-              {/* stepper */}
-              <div className="mb-9 flex items-center">
-                {STEPS.map((label, i) => (
-                  <div key={label} className={`flex items-center ${i < STEPS.length - 1 ? "flex-1" : ""}`}>
-                    <div className="flex items-center gap-2.5">
-                      <span
-                        className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-[0.8rem] font-bold transition-all ${
-                          i <= step ? "bg-grad text-bg" : "border text-mute"
-                        }`}
-                        style={i > step ? { borderColor: "var(--border-2)" } : undefined}
-                      >
-                        {i + 1}
-                      </span>
-                      <span className={`hidden text-[0.88rem] font-medium sm:block ${i <= step ? "text-white" : "text-mute"}`}>
-                        {label}
-                      </span>
-                    </div>
-                    {i < STEPS.length - 1 && (
-                      <div className="mx-3 h-px flex-1" style={{ background: i < step ? "#a855f7" : "var(--border-2)" }} />
-                    )}
-                  </div>
-                ))}
-              </div>
+            )}
 
-              <form onSubmit={submit} noValidate>
-                <motion.div
-                  key={step}
-                  initial={{ opacity: 0, x: 24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            {done ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="py-12 text-center"
+              >
+                <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-full bg-grad text-bg">
+                  <Check size={30} strokeWidth={3} />
+                </div>
+                <h3 className="mb-2 text-[1.5rem]">Message sent!</h3>
+                <p className="text-dim">Thanks — I&apos;ll get back to you within a day.</p>
+                <button
+                  onClick={() => {
+                    setDone(false);
+                    setStep(0);
+                  }}
+                  className="btn btn-ghost mt-7"
                 >
+                  Send another
+                </button>
+              </motion.div>
+            ) : (
+              <>
+                {/* stepper */}
+                <div className="mb-8 flex items-center">
+                  {STEPS.map((label, i) => (
+                    <div
+                      key={label}
+                      className={`flex items-center ${i < STEPS.length - 1 ? "flex-1" : ""}`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span
+                          className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-[0.8rem] font-bold transition-all ${
+                            i <= step ? "bg-grad text-bg" : "border text-mute"
+                          }`}
+                          style={i > step ? { borderColor: "var(--border-2)" } : undefined}
+                        >
+                          {i < step ? <Check size={15} strokeWidth={3} /> : i + 1}
+                        </span>
+                        <span
+                          className={`hidden text-[0.88rem] font-medium sm:block ${
+                            i <= step ? "text-white" : "text-mute"
+                          }`}
+                        >
+                          {label}
+                        </span>
+                      </div>
+                      {i < STEPS.length - 1 && (
+                        <div
+                          className="mx-3 h-px flex-1"
+                          style={{ background: i < step ? "#a855f7" : "var(--border-2)" }}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <form onSubmit={submit} noValidate>
+                  <motion.div
+                    key={step}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  >
                     {step === 0 && (
                       <div className="grid gap-5 sm:grid-cols-2">
                         <Field label="Name">
@@ -207,7 +351,7 @@ export default function Contact({ hideHeading = false }) {
                           <Input value={data.company} onChange={set("company")} placeholder="Acme Co. / acme.com" />
                         </Field>
                         <Field label="Phone" optional>
-                          <Input type="tel" value={data.phone} onChange={set("phone")} placeholder="+1 ..." autoComplete="tel" />
+                          <Input type="tel" value={data.phone} onChange={set("phone")} placeholder="+92 ..." autoComplete="tel" />
                         </Field>
                       </div>
                     )}
@@ -229,7 +373,7 @@ export default function Contact({ hideHeading = false }) {
                     {step === 2 && (
                       <Field label="Project details">
                         <textarea
-                          rows={7}
+                          rows={8}
                           value={data.message}
                           onChange={set("message")}
                           placeholder="Tell me about your store, the problem you're solving, and what success looks like…"
@@ -237,49 +381,37 @@ export default function Contact({ hideHeading = false }) {
                           style={{ borderColor: "var(--border)" }}
                         />
                       </Field>
-                  )}
-                </motion.div>
+                    )}
+                  </motion.div>
 
-                {err && <p className="mt-4 text-[0.88rem] text-brand-deep">{err}</p>}
+                  {err && <p className="mt-4 text-[0.88rem] text-brand-deep">{err}</p>}
 
-                {/* nav buttons */}
-                <div className="mt-9 flex items-center justify-between gap-4">
-                  {step > 0 ? (
-                    <button type="button" onClick={back} className="btn btn-ghost">
-                      <span className="text-[0.78rem]">←</span> Back
-                    </button>
-                  ) : <span />}
+                  <div className="mt-8 flex items-center justify-between gap-4">
+                    {step > 0 ? (
+                      <button type="button" onClick={back} className="btn btn-ghost">
+                        <ArrowLeft size={15} strokeWidth={2.2} /> Back
+                      </button>
+                    ) : (
+                      <span />
+                    )}
 
-                  {step < STEPS.length - 1 ? (
-                    <button type="button" onClick={next} className="btn btn-primary">
-                      Next <span className="text-[0.78rem]">→</span>
-                    </button>
-                  ) : (
-                    <button type="submit" disabled={sending} className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-60">
-                      {sending ? "Sending…" : <>Send Message <span className="text-[0.78rem]">➤</span></>}
-                    </button>
-                  )}
-                </div>
-              </form>
-            </>
-          )}
-
-          {/* direct contact */}
-          <div className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-3 border-t pt-7 text-[0.92rem]" style={{ borderColor: "var(--border)" }}>
-            <a href={`mailto:${CONTACT_EMAIL}`} className="text-dim transition-colors hover:text-brand-light">
-              ✉️ {CONTACT_EMAIL}
-            </a>
-            <a href={`tel:${CONTACT_PHONE_E164}`} className="text-dim transition-colors hover:text-brand-light">
-              📞 {CONTACT_PHONE_DISPLAY}
-            </a>
-            <a
-              href={`https://wa.me/${CONTACT_PHONE_E164.replace("+", "")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-dim transition-colors hover:text-brand-light"
-            >
-              💬 WhatsApp
-            </a>
+                    {step < STEPS.length - 1 ? (
+                      <button type="button" onClick={next} className="btn btn-primary">
+                        Next <ArrowRight size={15} strokeWidth={2.2} />
+                      </button>
+                    ) : (
+                      <button
+                        type="submit"
+                        disabled={sending}
+                        className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {sending ? "Sending…" : (<>Send Message <Send size={15} strokeWidth={2.2} /></>)}
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </>
+            )}
           </div>
         </div>
       </Reveal>

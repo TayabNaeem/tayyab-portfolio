@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
-import { ChatbotIcon, AutomationIcon, IntegrationIcon } from "./Icons";
+import { Globe, Users } from "lucide-react";
+import { ChatbotIcon, AutomationIcon } from "./Icons";
 import { ShopifyMark } from "./BrandLogos";
 
 const SERVICES = [
@@ -15,24 +16,31 @@ const SERVICES = [
   },
   {
     no: "02",
+    Icon: (p) => <Globe {...p} strokeWidth={1.7} />,
+    title: "Website Development",
+    desc: "Fast, modern marketing sites and web apps built with Next.js — responsive down to the last pixel.",
+    points: ["Next.js & React builds", "SEO-ready and accessible", "CMS & blog integration"],
+  },
+  {
+    no: "03",
     Icon: ChatbotIcon,
     title: "AI Chatbot Development",
     desc: "LLM-powered assistants that answer, qualify and sell — grounded in your real product data.",
     points: ["RAG over your catalog & docs", "Web, WhatsApp & Instagram", "Human handoff built in"],
   },
   {
-    no: "03",
+    no: "04",
     Icon: AutomationIcon,
     title: "AI Automation",
     desc: "End-to-end workflows that quietly remove the manual work from your daily operations.",
     points: ["n8n / Make / Zapier builds", "Order & inventory syncing", "AI agents for ops"],
   },
   {
-    no: "04",
-    Icon: IntegrationIcon,
-    title: "API Integrations",
-    desc: "Connect your store, CRM, and tools into one clean system that talks to itself.",
-    points: ["REST & GraphQL APIs", "CRM + ERP connections", "Custom webhooks"],
+    no: "05",
+    Icon: (p) => <Users {...p} strokeWidth={1.7} />,
+    title: "CRM Management",
+    desc: "Set up and run the CRM that keeps your pipeline clean and your follow-ups automatic.",
+    points: ["Zoho & HubSpot setup", "Lead capture + scoring", "Pipeline automation"],
   },
 ];
 
@@ -52,7 +60,7 @@ export default function Services({ hideHeading = false }) {
         </Reveal>
       )}
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {SERVICES.map((s, i) => (
           <Reveal key={s.title} delay={i * 0.09}>
             <motion.article
