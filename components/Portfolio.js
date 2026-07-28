@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Reveal from "./Reveal";
 import ProjectShot from "./ProjectShot";
 import { ShopifyMark } from "./BrandLogos";
+import { asset } from "@/lib/assets";
 
 // Live client stores. Descriptions reflect what each storefront actually sells.
 const PROJECTS = [
@@ -13,6 +15,7 @@ const PROJECTS = [
     id: "soundskins",
     name: "SoundSkins Global",
     url: "https://soundskinsglobal.com",
+    logo: "https://soundskinsglobal.com/cdn/shop/files/logo_edited_440x.jpg?v=1656396171",
     tag: "Automotive",
     desc: "Shopify storefront for a car acoustic-insulation brand — organised by product series with vehicle-specific pre-cut kits.",
     stack: ["Shopify", "Liquid", "CRO"],
@@ -23,6 +26,7 @@ const PROJECTS = [
     id: "cybex",
     name: "Cybex",
     url: "https://cybex.shopping/",
+    logo: "https://cybex.shopping/cdn/shop/files/WhatsApp_Image_2024-08-05_at_01.28.34_b161a887-removebg-preview.png?v=1723363141&width=320",
     tag: "Activewear",
     desc: "Premium activewear store for men and women covering tracksuits, hoodies, leggings and training accessories.",
     stack: ["Shopify", "Custom Theme", "Speed"],
@@ -31,10 +35,11 @@ const PROJECTS = [
   },
   {
     id: "elite",
-    name: "Elite Auto Gears",
-    url: "https://eliteautogears.com",
-    tag: "Automotive",
-    desc: "Shopify storefront built for an automotive gear and accessories retailer.",
+    name: "Elite Auto Gear",
+    url: "https://eliteautogear.com/",
+    logo: "https://eliteautogear.com/cdn/shop/files/EANEWLOGOGRAFITI_Recovered_-02_60ecd1de-62d5-4be4-b19f-4bc2cb312ec9.png?v=1703033320&width=500",
+    tag: "Car Audio",
+    desc: "Shopify storefront for a car audio retailer — speakers, amplifiers, subwoofers and install accessories.",
     stack: ["Shopify", "Liquid"],
     accent: "#7c3aed",
     accent2: "#a855f7",
@@ -43,6 +48,7 @@ const PROJECTS = [
     id: "rela",
     name: "RELA",
     url: "https://liverela.com",
+    logo: "https://liverela.com/cdn/shop/files/46377021-5d32-4602-b084-0c3d5981e895.png?v=1782838868&width=640",
     tag: "Pet Care",
     desc: "Shopify storefront for a pet care brand, currently in pre-launch behind a coming-soon page.",
     stack: ["Shopify", "Theme Setup"],
@@ -50,6 +56,32 @@ const PROJECTS = [
     accent2: "#8b5cf6",
   },
 ];
+
+/** Client's own logo on the hover overlay; falls back to their initials. */
+function BrandLogo({ name, logo }) {
+  const [failed, setFailed] = useState(false);
+  const initials = name
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  return (
+    <span className="grid min-h-[64px] min-w-[64px] place-items-center rounded-2xl border border-white/25 bg-white/90 px-4 py-3 backdrop-blur-md">
+      {logo && !failed ? (
+        <img
+          src={asset(logo)}
+          alt={`${name} logo`}
+          onError={() => setFailed(true)}
+          className="max-h-10 max-w-[130px] object-contain"
+        />
+      ) : (
+        <span className="font-display text-[1.5rem] font-bold text-[#0a0a0b]">{initials}</span>
+      )}
+    </span>
+  );
+}
 
 export default function Portfolio({ hideHeading = false, limit }) {
   const shown = limit ? PROJECTS.slice(0, limit) : PROJECTS;
@@ -100,9 +132,7 @@ export default function Portfolio({ hideHeading = false, limit }) {
                   className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 backdrop-blur-[3px] transition-opacity duration-300 group-hover:opacity-100"
                   style={{ background: "linear-gradient(160deg, rgba(168,85,247,0.72), rgba(109,40,217,0.78))" }}
                 >
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl border border-white/25 bg-white/15 backdrop-blur-md">
-                    <ShopifyMark className="h-8 w-8" />
-                  </span>
+                  <BrandLogo name={p.name} logo={p.logo} />
                   <span className="flex items-center gap-1.5 text-[0.85rem] font-semibold text-white">
                     Visit live store <ArrowUpRight size={15} strokeWidth={2.4} />
                   </span>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { StoreMockup } from "./Mockups";
+import { asset } from "@/lib/assets";
 
 /**
  * Homepage preview for a project card.
@@ -22,7 +23,7 @@ export default function ProjectShot({ id, name, shot, accent, accent2 }) {
 
   return (
     <img
-      src={shot}
+      src={asset(shot)}
       alt={`${name} homepage`}
       onError={() => setFailed(true)}
       className="h-full w-full object-cover object-top"
