@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Reveal from "./Reveal";
-import { StoreMockup } from "./Mockups";
+import ProjectShot from "./ProjectShot";
 import { ShopifyMark } from "./BrandLogos";
 
 // Live client stores. Descriptions reflect what each storefront actually sells.
@@ -30,16 +30,6 @@ const PROJECTS = [
     accent2: "#4f46e5",
   },
   {
-    id: "roohi",
-    name: "ROOHI",
-    url: "https://roohiapparel.com",
-    tag: "Apparel",
-    desc: "Culturally-inspired apparel brand selling graphic tees and embroidered two-piece sets.",
-    stack: ["Shopify", "Liquid", "Branding"],
-    accent: "#c084fc",
-    accent2: "#7c3aed",
-  },
-  {
     id: "elite",
     name: "Elite Auto Gears",
     url: "https://eliteautogears.com",
@@ -53,8 +43,8 @@ const PROJECTS = [
     id: "rela",
     name: "RELA",
     url: "https://liverela.com",
-    tag: "Pre-launch",
-    desc: "Shopify build for a new brand, currently in pre-launch behind a coming-soon page.",
+    tag: "Pet Care",
+    desc: "Shopify storefront for a pet care brand, currently in pre-launch behind a coming-soon page.",
     stack: ["Shopify", "Theme Setup"],
     accent: "#6d28d9",
     accent2: "#8b5cf6",
@@ -93,10 +83,16 @@ export default function Portfolio({ hideHeading = false, limit }) {
               style={{ borderColor: "var(--border)" }}
             >
               {/* preview */}
-              <div className="relative h-[190px] overflow-hidden border-b" style={{ borderColor: "var(--border)" }}>
+              <div className="relative h-[200px] overflow-hidden border-b bg-surface-2" style={{ borderColor: "var(--border)" }}>
                 <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.04]">
-                  <StoreMockup accent={p.accent} accent2={p.accent2} id={p.id} />
+                  <ProjectShot id={p.id} url={p.url} name={p.name} shot={p.shot} accent={p.accent} accent2={p.accent2} />
                 </div>
+                {/* darken the bottom so the badges stay legible */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0"
+                  style={{ background: "linear-gradient(180deg, rgba(10,10,11,0.45) 0%, transparent 35%, rgba(10,10,11,0.25) 100%)" }}
+                />
                 <span
                   className="absolute left-3.5 top-3.5 flex items-center gap-1.5 rounded-full border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-wider text-white backdrop-blur-md"
                   style={{ borderColor: "var(--border-2)", background: "#131317b3" }}
