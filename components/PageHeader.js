@@ -9,26 +9,6 @@ import { motion } from "framer-motion";
 export default function PageHeader({ eyebrow, title, accent, subtitle }) {
   return (
     <header className="relative overflow-hidden pt-40 pb-16 md:pt-48 md:pb-20">
-      {/* decorative arcs */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 grid place-items-center">
-        <div
-          className="absolute rounded-full border animate-spin-slower"
-          style={{ width: 620, height: 620, borderColor: "rgba(168,85,247,0.10)" }}
-        />
-        <div
-          className="absolute rounded-full border border-dashed animate-spin-slow"
-          style={{ width: 430, height: 430, borderColor: "rgba(124,58,237,0.10)" }}
-        />
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: 420, height: 260,
-            background: "radial-gradient(ellipse at center, rgba(168,85,247,0.20), transparent 70%)",
-            filter: "blur(50px)",
-          }}
-        />
-      </div>
-
       <div className="shell relative">
         {/* breadcrumb */}
         <motion.nav

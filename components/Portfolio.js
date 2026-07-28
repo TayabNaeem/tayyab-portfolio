@@ -85,7 +85,7 @@ export default function Portfolio({ hideHeading = false, limit }) {
               {/* preview */}
               <div className="relative h-[200px] overflow-hidden border-b bg-surface-2" style={{ borderColor: "var(--border)" }}>
                 <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.04]">
-                  <ProjectShot id={p.id} url={p.url} name={p.name} shot={p.shot} accent={p.accent} accent2={p.accent2} />
+                  <ProjectShot id={p.id} name={p.name} shot={p.shot} accent={p.accent} accent2={p.accent2} />
                 </div>
                 {/* darken the bottom so the badges stay legible */}
                 <div
@@ -93,6 +93,20 @@ export default function Portfolio({ hideHeading = false, limit }) {
                   className="pointer-events-none absolute inset-0"
                   style={{ background: "linear-gradient(180deg, rgba(10,10,11,0.45) 0%, transparent 35%, rgba(10,10,11,0.25) 100%)" }}
                 />
+
+                {/* purple hover overlay with the Shopify logo */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 backdrop-blur-[3px] transition-opacity duration-300 group-hover:opacity-100"
+                  style={{ background: "linear-gradient(160deg, rgba(168,85,247,0.72), rgba(109,40,217,0.78))" }}
+                >
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl border border-white/25 bg-white/15 backdrop-blur-md">
+                    <ShopifyMark className="h-8 w-8" />
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[0.85rem] font-semibold text-white">
+                    Visit live store <ArrowUpRight size={15} strokeWidth={2.4} />
+                  </span>
+                </div>
                 <span
                   className="absolute left-3.5 top-3.5 flex items-center gap-1.5 rounded-full border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-wider text-white backdrop-blur-md"
                   style={{ borderColor: "var(--border-2)", background: "#131317b3" }}
