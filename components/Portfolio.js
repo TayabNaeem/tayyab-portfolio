@@ -13,6 +13,7 @@ import { asset } from "@/lib/assets";
 const PROJECTS = [
   {
     id: "soundskins",
+    shot: "/portfolio/shots/soundskins.jpg",
     name: "SoundSkins Global",
     url: "https://soundskinsglobal.com",
     logo: "https://soundskinsglobal.com/cdn/shop/files/logo_edited_440x.jpg?v=1656396171",
@@ -24,6 +25,7 @@ const PROJECTS = [
   },
   {
     id: "cybex",
+    shot: "/portfolio/shots/cybex.jpg",
     name: "Cybex",
     url: "https://cybex.shopping/",
     logo: "https://cybex.shopping/cdn/shop/files/WhatsApp_Image_2024-08-05_at_01.28.34_b161a887-removebg-preview.png?v=1723363141&width=320",
@@ -35,6 +37,7 @@ const PROJECTS = [
   },
   {
     id: "elite",
+    shot: "/portfolio/shots/elite.jpg",
     name: "Elite Auto Gear",
     url: "https://eliteautogear.com/",
     logo: "https://eliteautogear.com/cdn/shop/files/EANEWLOGOGRAFITI_Recovered_-02_60ecd1de-62d5-4be4-b19f-4bc2cb312ec9.png?v=1703033320&width=500",
@@ -46,6 +49,7 @@ const PROJECTS = [
   },
   {
     id: "rela",
+    shot: "/portfolio/shots/rela.jpg",
     name: "RELA",
     url: "https://liverela.com",
     logo: "https://liverela.com/cdn/shop/files/46377021-5d32-4602-b084-0c3d5981e895.png?v=1782838868&width=640",
