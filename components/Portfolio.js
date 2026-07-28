@@ -17,6 +17,7 @@ const PROJECTS = [
     name: "SoundSkins Global",
     url: "https://soundskinsglobal.com",
     logo: "https://soundskinsglobal.com/cdn/shop/files/logo_edited_440x.jpg?v=1656396171",
+    logoOpaque: true, // JPG with a baked-in white background
     tag: "Automotive",
     desc: "Shopify storefront for a car acoustic-insulation brand — organised by product series with vehicle-specific pre-cut kits.",
     stack: ["Shopify", "Liquid", "CRO"],
@@ -62,7 +63,7 @@ const PROJECTS = [
 ];
 
 /** Client's own logo on the hover overlay; falls back to their initials. */
-function BrandLogo({ name, logo }) {
+function BrandLogo({ name, logo, logoOpaque }) {
   const [failed, setFailed] = useState(false);
   const initials = name
     .split(/\s+/)
@@ -71,19 +72,32 @@ function BrandLogo({ name, logo }) {
     .slice(0, 2)
     .toUpperCase();
 
+  if (!logo || failed) {
+    return (
+      <span
+        className="font-display text-[2rem] font-bold text-white"
+        style={{ textShadow: "0 2px 12px rgba(0,0,0,0.45)" }}
+      >
+        {initials}
+      </span>
+    );
+  }
+
   return (
-    <span className="grid min-h-[64px] min-w-[64px] place-items-center rounded-2xl border border-white/25 bg-white/90 px-4 py-3 backdrop-blur-md">
-      {logo && !failed ? (
-        <img
-          src={asset(logo)}
-          alt={`${name} logo`}
-          onError={() => setFailed(true)}
-          className="max-h-10 max-w-[130px] object-contain"
-        />
-      ) : (
-        <span className="font-display text-[1.5rem] font-bold text-[#0a0a0b]">{initials}</span>
-      )}
-    </span>
+    <img
+      src={asset(logo)}
+      alt={`${name} logo`}
+      onError={() => setFailed(true)}
+      className="max-h-14 max-w-[190px] object-contain"
+      style={
+        // Dark-on-white JPGs carry a white box. Inverting turns the box black
+        // and the mark white; screen then drops the black, leaving a clean
+        // white logo on the purple overlay.
+        logoOpaque
+          ? { filter: "invert(1) brightness(1.15)", mixBlendMode: "screen" }
+          : { filter: "drop-shadow(0 3px 14px rgba(0,0,0,0.5))" }
+      }
+    />
   );
 }
 
@@ -136,7 +150,7 @@ export default function Portfolio({ hideHeading = false, limit }) {
                   className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 backdrop-blur-[3px] transition-opacity duration-300 group-hover:opacity-100"
                   style={{ background: "linear-gradient(160deg, rgba(168,85,247,0.72), rgba(109,40,217,0.78))" }}
                 >
-                  <BrandLogo name={p.name} logo={p.logo} />
+                  <BrandLogo name={p.name} logo={p.logo} logoOpaque={p.logoOpaque} />
                   <span className="flex items-center gap-1.5 text-[0.85rem] font-semibold text-white">
                     Visit live store <ArrowUpRight size={15} strokeWidth={2.4} />
                   </span>
