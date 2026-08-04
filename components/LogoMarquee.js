@@ -1,28 +1,63 @@
 "use client";
 
-import {
-  ShopifyLogo, BotpressLogo, VoiceflowLogo, VapiLogo,
-  N8nLogo, MakeLogo, ZapierLogo, ZohoLogo,
-} from "./BrandLogos";
+import { N8nLogo } from "./BrandLogos";
 
+/**
+ * Tool logos. The PNGs are the official dark marks, trimmed to their bounding
+ * box, so they get inverted to read as light on the dark background. n8n has no
+ * supplied file, so its drawn SVG is used and only desaturated.
+ */
 const LOGOS = [
-  { Logo: ShopifyLogo, name: "Shopify" },
-  { Logo: BotpressLogo, name: "Botpress" },
-  { Logo: VoiceflowLogo, name: "Voiceflow" },
-  { Logo: VapiLogo, name: "Vapi" },
-  { Logo: N8nLogo, name: "n8n" },
-  { Logo: MakeLogo, name: "Make" },
-  { Logo: ZapierLogo, name: "Zapier" },
-  { Logo: ZohoLogo, name: "Zoho" },
+  { name: "Shopify", src: "/assets/logos/shopify.png", ratio: 3.45 },
+  { name: "Botpress", src: "/assets/logos/botpress.png", ratio: 3.81 },
+  { name: "Voiceflow", src: "/assets/logos/voiceflow.png", ratio: 5.49 },
+  { name: "Vapi", src: "/assets/logos/vapi.png", ratio: 3.13 },
+  { name: "n8n", Logo: N8nLogo },
+  { name: "Make", src: "/assets/logos/make.png", ratio: 4.84 },
+  { name: "Zapier", src: "/assets/logos/zapier.png", ratio: 3.67 },
+  { name: "Zoho", src: "/assets/logos/zoho.png", ratio: 2.33 },
 ];
+
+const H = 34; // rendered logo height in px
+
+function Item({ item, hidden }) {
+  const shared =
+    "shrink-0 opacity-45 transition-opacity duration-300 hover:opacity-100";
+
+  if (item.src) {
+    return (
+      <span aria-hidden={hidden} title={item.name} className={shared}>
+        <img
+          src={item.src}
+          alt={hidden ? "" : `${item.name} logo`}
+          width={Math.round(H * item.ratio)}
+          height={H}
+          style={{ height: H, width: "auto", filter: "grayscale(1) invert(1)" }}
+        />
+      </span>
+    );
+  }
+
+  const { Logo } = item;
+  return (
+    <span
+      aria-hidden={hidden}
+      title={item.name}
+      className={shared}
+      style={{ filter: "grayscale(1) brightness(2.6)" }}
+    >
+      {/* BrandLogos components only accept className, so size via a class */}
+      <Logo className="h-[34px] w-auto" />
+    </span>
+  );
+}
 
 /**
  * Full-bleed grayscale logo bar.
  *
- * The set is rendered twice and the track translates by -50%, so the loop is
- * seamless. Logo size and gap are large enough that a single set is wider than
- * a typical viewport, which keeps each logo on screen only once at a time.
- * Colour returns on hover.
+ * The set renders twice and the track translates by -50%, with each set padded
+ * to exactly half the track width, so the loop is seamless. Logo size and gap
+ * keep one set wider than a typical viewport, so each logo shows only once.
  */
 export default function LogoMarquee() {
   return (
@@ -35,19 +70,11 @@ export default function LogoMarquee() {
           "linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%)",
       }}
     >
-      {/* two identical sets, each exactly half the track, so -50% loops cleanly */}
       <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
         {[0, 1].map((set) => (
           <div key={set} className="flex shrink-0 items-center gap-32 pr-32">
-            {LOGOS.map(({ Logo, name }) => (
-              <span
-                key={`${set}-${name}`}
-                aria-hidden={set === 1}
-                title={name}
-                className="shrink-0 grayscale brightness-[1.7] opacity-40 transition duration-300 hover:grayscale-0 hover:brightness-100 hover:opacity-100"
-              >
-                <Logo className="h-9 w-auto" />
-              </span>
+            {LOGOS.map((item) => (
+              <Item key={`${set}-${item.name}`} item={item} hidden={set === 1} />
             ))}
           </div>
         ))}
