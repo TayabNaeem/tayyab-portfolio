@@ -2,15 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  ShopifyLogo, ShopifyMark, BotpressLogo, BotpressMark, VoiceflowLogo, VapiLogo,
-  N8nLogo, N8nMark, MakeLogo, ZapierLogo, ZohoLogo,
-} from "./BrandLogos";
-
-const TOOL_LOGOS = [
-  ShopifyLogo, BotpressLogo, VoiceflowLogo, VapiLogo,
-  N8nLogo, MakeLogo, ZapierLogo, ZohoLogo,
-];
+import { ShopifyMark, BotpressMark, N8nMark } from "./BrandLogos";
+import LogoMarquee from "./LogoMarquee";
 
 // Floating platform logos that orbit the portrait — logo only, large
 const BADGES = [
@@ -30,14 +23,14 @@ const item = {
 
 export default function Hero() {
   return (
-    <section id="home" className="min-h-screen flex items-center pt-36 pb-16">
+    <section id="home" className="min-h-screen flex flex-col justify-center pt-36 pb-10">
       <div className="shell w-full grid md:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 items-center">
         {/* Left */}
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
-          className="text-center md:text-left order-2 md:order-1"
+          className="min-w-0 text-center md:text-left order-2 md:order-1"
         >
           <motion.span variants={item} className="inline-block text-[0.85rem] font-semibold tracking-[0.3em] text-brand mb-4">
             HELLO, I&apos;M
@@ -59,14 +52,6 @@ export default function Hero() {
             <Link href="/contact" className="btn btn-ghost">
               Let&apos;s Talk <span className="text-[0.78rem]">➤</span>
             </Link>
-          </motion.div>
-          <motion.div variants={item}>
-            <span className="block text-[0.8rem] text-mute mb-4">Building with</span>
-            <div className="flex flex-wrap gap-x-6 gap-y-4 items-center justify-center md:justify-start">
-              {TOOL_LOGOS.map((Logo, i) => (
-                <Logo key={i} className="h-[21px] w-auto text-mute/70 hover:text-brand-light transition-colors" />
-              ))}
-            </div>
           </motion.div>
         </motion.div>
 
@@ -248,6 +233,16 @@ export default function Hero() {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* full-bleed tool marquee */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.9, duration: 0.6 }}
+        className="mt-12 w-full md:mt-16"
+      >
+        <LogoMarquee />
+      </motion.div>
     </section>
   );
 }
