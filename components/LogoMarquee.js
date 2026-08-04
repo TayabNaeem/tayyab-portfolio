@@ -46,7 +46,7 @@ export default function LogoMarquee() {
                 title={name}
                 className="shrink-0 grayscale brightness-[1.7] opacity-40 transition duration-300 hover:grayscale-0 hover:brightness-100 hover:opacity-100"
               >
-                <Logo className="h-11 w-auto" />
+                <Logo className="h-9 w-auto" />
               </span>
             ))}
           </div>
