@@ -51,7 +51,7 @@ export default function CTA() {
                 Available for new projects
               </span>
 
-              <h3 className="text-[clamp(1.7rem,3.4vw,2.6rem)] leading-[1.1]">
+              <h3 className="h2">
                 Have a project in mind?{" "}
                 <span className="grad-text">Let&apos;s build it.</span>
               </h3>

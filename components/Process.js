@@ -37,7 +37,7 @@ export default function Process({ hideHeading = false }) {
       {!hideHeading && (
         <Reveal className="mb-14 text-center max-w-[620px] mx-auto">
           <span className="eyebrow">HOW I WORK</span>
-          <h2 className="text-[clamp(1.8rem,4vw,2.7rem)]">
+          <h2 className="h2">
             A simple, <span className="grad-text">proven process.</span>
           </h2>
           <p className="text-dim mt-4">

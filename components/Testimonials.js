@@ -1,12 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { Quote, Star } from "lucide-react";
 import Reveal from "./Reveal";
 
+/**
+ * PLACEHOLDER CONTENT — replace with real client quotes before this goes live.
+ * Publishing invented testimonials attributed to named people is misleading.
+ */
 const REVIEWS = [
   {
     quote:
-      "Tayyab rebuilt our storefront and it finally feels fast. Conversions jumped in the first month and the code was clean enough for our team to keep extending.",
+      "Tayyab rebuilt our storefront and it finally feels fast. Conversions jumped in the first month and the code was clean enough for our team to keep extending without calling him back.",
     name: "James Carter",
     role: "CEO, TechVision",
     initials: "JC",
@@ -14,7 +19,7 @@ const REVIEWS = [
   },
   {
     quote:
-      "The chatbot he built handles most of our support now. It actually knows our catalog — customers get real answers instead of canned replies.",
+      "The chatbot he built handles most of our support now. It actually knows our catalog, so customers get real answers instead of canned replies.",
     name: "Sara Ahmed",
     role: "Founder, Lumière",
     initials: "SA",
@@ -30,62 +35,122 @@ const REVIEWS = [
   },
 ];
 
-function Stars() {
+function Stars({ size = 14 }) {
   return (
-    <div className="flex gap-1 mb-4">
+    <div className="flex gap-1">
       {[...Array(5)].map((_, i) => (
-        <svg key={i} viewBox="0 0 24 24" className="w-4 h-4 text-brand" fill="currentColor">
-          <path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3.1-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z" />
-        </svg>
+        <Star key={i} size={size} strokeWidth={0} fill="currentColor" className="text-brand" />
       ))}
     </div>
   );
 }
 
 export default function Testimonials({ hideHeading = false }) {
+  const [active, setActive] = useState(0);
+  const current = REVIEWS[active];
+
   return (
     <section id="testimonials" className={`shell ${hideHeading ? "pb-24" : "py-24"}`}>
       {!hideHeading && (
-        <Reveal className="mb-12">
+        <Reveal className="mb-12 max-w-[620px]">
           <span className="eyebrow">TESTIMONIALS</span>
-          <h2 className="text-[clamp(1.8rem,4vw,2.7rem)]">
-            What Clients Say <span className="grad-text">About Me.</span>
+          <h2 className="h2">
+            What clients <span className="grad-text">say.</span>
           </h2>
         </Reveal>
       )}
 
-      <div className="grid md:grid-cols-3 gap-5">
-        {REVIEWS.map((r, i) => (
-          <Reveal key={r.name} delay={i * 0.1}>
-            <motion.figure
-              whileHover={{ y: -6 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="relative h-full flex flex-col rounded-[20px] border p-7 bg-gradient-to-br from-surface-2 to-surface hover:border-brand/40 transition-colors"
+      <div className="grid gap-5 lg:grid-cols-[1.5fr_1fr] lg:gap-8">
+        {/* featured quote */}
+        <Reveal>
+          <figure
+            className="relative flex h-full flex-col overflow-hidden rounded-[26px] border p-8 sm:p-11"
+            style={{
+              borderColor: "var(--border-2)",
+              background: "linear-gradient(160deg, rgba(168,85,247,0.10), #151517 60%)",
+            }}
+          >
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 rounded-full"
+              style={{
+                background: "radial-gradient(circle, rgba(168,85,247,0.25), transparent 70%)",
+                filter: "blur(34px)",
+              }}
+            />
+
+            <Quote size={44} strokeWidth={1.4} className="relative mb-6 text-brand/50" />
+
+            <blockquote className="relative mb-8 font-display text-[clamp(1.25rem,2.3vw,1.75rem)] font-medium leading-[1.4] tracking-[-0.02em]">
+              {current.quote}
+            </blockquote>
+
+            <figcaption
+              className="relative mt-auto flex items-center gap-4 border-t pt-6"
               style={{ borderColor: "var(--border)" }}
             >
-              <span className="pointer-events-none absolute top-4 right-6 font-display text-[3.5rem] leading-none text-brand/15">
-                &ldquo;
-              </span>
+              <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-grad font-display text-[1rem] font-bold text-bg">
+                {current.initials}
+              </div>
+              <div className="min-w-0">
+                <strong className="block truncate font-display text-[1rem] font-semibold">
+                  {current.name}
+                </strong>
+                <span className="small block truncate">{current.role}</span>
+              </div>
+              <div className="ml-auto hidden sm:block">
+                <Stars size={16} />
+              </div>
+            </figcaption>
+          </figure>
+        </Reveal>
 
-              <Stars />
-              <blockquote className="relative text-[0.95rem] text-dim mb-6">{r.quote}</blockquote>
-
-              <figcaption className="mt-auto flex items-center gap-3.5 pt-5 border-t" style={{ borderColor: "var(--border)" }}>
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-grad font-display text-[0.85rem] font-bold text-bg">
-                  {r.initials}
-                </div>
-                <div className="min-w-0">
-                  <strong className="block text-[0.92rem] truncate">{r.name}</strong>
-                  <span className="text-mute text-[0.8rem] truncate">{r.role}</span>
-                </div>
-                <span className="ml-auto shrink-0 rounded-full border px-2.5 py-1 text-[0.66rem] font-semibold uppercase tracking-wider text-brand"
-                      style={{ borderColor: "var(--border-2)" }}>
-                  {r.tag}
-                </span>
-              </figcaption>
-            </motion.figure>
-          </Reveal>
-        ))}
+        {/* selector list */}
+        <Reveal delay={0.08}>
+          <div className="flex h-full flex-col gap-3">
+            {REVIEWS.map((r, i) => {
+              const isActive = i === active;
+              return (
+                <button
+                  key={r.name}
+                  type="button"
+                  onClick={() => setActive(i)}
+                  aria-pressed={isActive}
+                  className={`group flex flex-1 items-center gap-4 rounded-2xl border p-5 text-left transition-all duration-300 ${
+                    isActive ? "bg-surface-2" : "bg-surface hover:bg-surface-2"
+                  }`}
+                  style={{
+                    borderColor: isActive ? "rgba(168,85,247,0.55)" : "var(--border)",
+                  }}
+                >
+                  <div
+                    className={`grid h-11 w-11 shrink-0 place-items-center rounded-full font-display text-[0.85rem] font-bold transition-colors ${
+                      isActive ? "bg-grad text-bg" : "bg-surface-3 text-dim"
+                    }`}
+                  >
+                    {r.initials}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <strong
+                      className={`block truncate font-display text-[0.95rem] font-semibold transition-colors ${
+                        isActive ? "text-white" : "text-dim group-hover:text-white"
+                      }`}
+                    >
+                      {r.name}
+                    </strong>
+                    <span className="small block truncate">{r.role}</span>
+                  </div>
+                  <span
+                    className="shrink-0 rounded-full border px-2.5 py-1 text-[0.66rem] font-semibold uppercase tracking-wider text-brand"
+                    style={{ borderColor: "var(--border-2)" }}
+                  >
+                    {r.tag}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </Reveal>
       </div>
     </section>
   );

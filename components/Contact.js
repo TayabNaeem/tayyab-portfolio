@@ -19,10 +19,11 @@ const STEPS = ["About you", "Project", "Details"];
 
 const SERVICES = [
   "Shopify Development",
-  "Website Development",
-  "AI Chatbot",
-  "AI Automation",
-  "CRM Management",
+  "WordPress Development",
+  "AI Chatbot & Voice Agents",
+  "Automations",
+  "Meta Ads",
+  "Landing Pages",
   "Something else",
 ];
 const BUDGETS = ["< $500", "$500 – $1k", "$1k – $5k", "$5k+"];
@@ -104,7 +105,7 @@ function ContactInfo() {
   return (
     <div className="lg:sticky lg:top-32">
       <span className="eyebrow">CONTACT DETAILS</span>
-      <h3 className="mb-4 text-[clamp(1.5rem,2.6vw,2rem)]">
+      <h3 className="h2 mb-4">
         Let&apos;s start a <span className="grad-text">conversation.</span>
       </h3>
       <p className="mb-9 max-w-[380px] text-[0.95rem] text-dim">
@@ -249,7 +250,7 @@ export default function Contact({ hideHeading = false }) {
             {!hideHeading && (
               <div className="mb-8">
                 <span className="eyebrow">GET IN TOUCH</span>
-                <h2 className="text-[clamp(1.6rem,3vw,2.2rem)]">
+                <h2 className="h2">
                   Tell me about <span className="grad-text">your project.</span>
                 </h2>
               </div>

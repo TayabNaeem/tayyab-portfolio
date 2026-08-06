@@ -1,13 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Reveal from "./Reveal";
 import ProjectShot from "./ProjectShot";
-import { ShopifyMark } from "./BrandLogos";
-import { asset } from "@/lib/assets";
 
 // Live client stores. Descriptions reflect what each storefront actually sells.
 const PROJECTS = [
@@ -16,11 +14,8 @@ const PROJECTS = [
     shot: "/portfolio/shots/soundskins.jpg",
     name: "SoundSkins Global",
     url: "https://soundskinsglobal.com",
-    logo: "https://soundskinsglobal.com/cdn/shop/files/logo_edited_440x.jpg?v=1656396171",
-    logoOpaque: true, // JPG with a baked-in white background
     tag: "Automotive",
-    desc: "Shopify storefront for a car acoustic-insulation brand — organised by product series with vehicle-specific pre-cut kits.",
-    stack: ["Shopify", "Liquid", "Theme customization"],
+    year: "Shopify",
     accent: "#a855f7",
     accent2: "#6d28d9",
   },
@@ -29,10 +24,8 @@ const PROJECTS = [
     shot: "/portfolio/shots/cybex.jpg",
     name: "Cybex",
     url: "https://cybex.shopping/",
-    logo: "https://cybex.shopping/cdn/shop/files/WhatsApp_Image_2024-08-05_at_01.28.34_b161a887-removebg-preview.png?v=1723363141&width=320",
     tag: "Activewear",
-    desc: "Premium activewear store for men and women covering tracksuits, hoodies, leggings and training accessories.",
-    stack: ["Shopify", "Custom Theme", "Speed"],
+    year: "Shopify",
     accent: "#8b5cf6",
     accent2: "#4f46e5",
   },
@@ -41,10 +34,8 @@ const PROJECTS = [
     shot: "/portfolio/shots/elite.jpg",
     name: "Elite Auto Gear",
     url: "https://eliteautogear.com/",
-    logo: "https://eliteautogear.com/cdn/shop/files/EANEWLOGOGRAFITI_Recovered_-02_60ecd1de-62d5-4be4-b19f-4bc2cb312ec9.png?v=1703033320&width=500",
     tag: "Car Audio",
-    desc: "Shopify storefront for a car audio retailer — speakers, amplifiers, subwoofers and install accessories.",
-    stack: ["Shopify", "Liquid"],
+    year: "Shopify",
     accent: "#7c3aed",
     accent2: "#a855f7",
   },
@@ -53,144 +44,144 @@ const PROJECTS = [
     shot: "/portfolio/shots/rela.jpg",
     name: "RELA",
     url: "https://liverela.com",
-    logo: "https://liverela.com/cdn/shop/files/46377021-5d32-4602-b084-0c3d5981e895.png?v=1782838868&width=640",
     tag: "Pet Care",
-    desc: "Shopify storefront for a pet care brand, currently in pre-launch behind a coming-soon page.",
-    stack: ["Shopify", "Theme Setup"],
+    year: "Shopify",
     accent: "#6d28d9",
     accent2: "#8b5cf6",
   },
 ];
 
-/** Client's own logo on the hover overlay; falls back to their initials. */
-function BrandLogo({ name, logo, logoOpaque }) {
-  const [failed, setFailed] = useState(false);
-  const initials = name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
-  if (!logo || failed) {
-    return (
-      <span
-        className="font-display text-[2rem] font-bold text-white"
-        style={{ textShadow: "0 2px 12px rgba(0,0,0,0.45)" }}
-      >
-        {initials}
-      </span>
-    );
-  }
-
-  return (
-    <img
-      src={asset(logo)}
-      alt={`${name} logo`}
-      onError={() => setFailed(true)}
-      className="max-h-14 max-w-[190px] object-contain"
-      style={
-        // Dark-on-white JPGs carry a white box. Inverting turns the box black
-        // and the mark white; screen then drops the black, leaving a clean
-        // white logo on the purple overlay.
-        logoOpaque
-          ? { filter: "invert(1) brightness(1.15)", mixBlendMode: "screen" }
-          : { filter: "drop-shadow(0 3px 14px rgba(0,0,0,0.5))" }
-      }
-    />
-  );
-}
-
 export default function Portfolio({ hideHeading = false, limit }) {
   const shown = limit ? PROJECTS.slice(0, limit) : PROJECTS;
+  const [hovered, setHovered] = useState(null);
+  const wrapRef = useRef(null);
+
+  // preview follows the cursor with a little lag
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const x = useSpring(mx, { stiffness: 260, damping: 28, mass: 0.5 });
+  const y = useSpring(my, { stiffness: 260, damping: 28, mass: 0.5 });
+
+  const onMove = (e) => {
+    const r = wrapRef.current?.getBoundingClientRect();
+    if (!r) return;
+    mx.set(e.clientX - r.left);
+    my.set(e.clientY - r.top);
+  };
 
   return (
     <section id="portfolio" className={`shell ${hideHeading ? "pb-24" : "py-24"}`}>
       {!hideHeading && (
         <Reveal className="mb-12 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <span className="eyebrow">PORTFOLIO</span>
-            <h2 className="text-[clamp(1.8rem,4vw,2.7rem)]">
-              Shopify stores <span className="grad-text">I&apos;ve built.</span>
+            <span className="eyebrow">SELECTED WORK</span>
+            <h2 className="h2">
+              Stores I&apos;ve <span className="grad-text">built.</span>
             </h2>
+            <p className="lead mt-4 max-w-[520px]">
+              Live Shopify storefronts — hover to preview, click to visit the real thing.
+            </p>
           </div>
           <Link href="/work" className="btn btn-ghost self-start sm:self-auto">
-            View All Work <ArrowUpRight size={15} strokeWidth={2.2} />
+            View all work <ArrowUpRight size={15} strokeWidth={2.2} />
           </Link>
         </Reveal>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div
+        ref={wrapRef}
+        onMouseMove={onMove}
+        onMouseLeave={() => setHovered(null)}
+        className="relative border-t"
+        style={{ borderColor: "var(--border)" }}
+      >
+        {/* cursor-following preview (desktop only) */}
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute left-0 top-0 z-20 hidden lg:block"
+          style={{ x, y, translateX: "-50%", translateY: "-50%" }}
+        >
+          <motion.div
+            animate={{
+              opacity: hovered !== null ? 1 : 0,
+              scale: hovered !== null ? 1 : 0.86,
+            }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="h-[230px] w-[400px] overflow-hidden rounded-2xl border shadow-soft"
+            style={{ borderColor: "var(--border-2)", background: "#131317" }}
+          >
+            {hovered !== null && (
+              <ProjectShot
+                id={shown[hovered].id}
+                name={shown[hovered].name}
+                shot={shown[hovered].shot}
+                accent={shown[hovered].accent}
+                accent2={shown[hovered].accent2}
+              />
+            )}
+          </motion.div>
+        </motion.div>
+
         {shown.map((p, i) => (
-          <Reveal key={p.id} delay={(i % 3) * 0.08}>
-            <motion.a
+          <Reveal key={p.id} delay={(i % 4) * 0.05}>
+            <a
               href={p.url}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ y: -8 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="group flex h-full flex-col overflow-hidden rounded-[20px] border bg-surface transition-colors hover:border-brand/50 hover:shadow-soft"
+              onMouseEnter={() => setHovered(i)}
+              className="group relative block border-b"
               style={{ borderColor: "var(--border)" }}
             >
-              {/* preview */}
-              <div className="relative h-[200px] overflow-hidden border-b bg-surface-2" style={{ borderColor: "var(--border)" }}>
-                <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.04]">
-                  <ProjectShot id={p.id} name={p.name} shot={p.shot} accent={p.accent} accent2={p.accent2} />
-                </div>
-                {/* darken the bottom so the badges stay legible */}
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0"
-                  style={{ background: "linear-gradient(180deg, rgba(10,10,11,0.45) 0%, transparent 35%, rgba(10,10,11,0.25) 100%)" }}
-                />
+              {/* hover wash */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  background:
+                    "linear-gradient(90deg, rgba(168,85,247,0.14) 0%, transparent 70%)",
+                }}
+              />
 
-                {/* purple hover overlay with the Shopify logo */}
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 backdrop-blur-[3px] transition-opacity duration-300 group-hover:opacity-100"
-                  style={{ background: "linear-gradient(160deg, rgba(168,85,247,0.72), rgba(109,40,217,0.78))" }}
-                >
-                  <BrandLogo name={p.name} logo={p.logo} logoOpaque={p.logoOpaque} />
-                  <span className="flex items-center gap-1.5 text-[0.85rem] font-semibold text-white">
-                    Visit live store <ArrowUpRight size={15} strokeWidth={2.4} />
+              <div className="relative flex items-center gap-6 px-1 py-7 sm:px-5 md:px-8 lg:py-9">
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1.5 flex flex-wrap items-center gap-3">
+                    <span className="small uppercase tracking-[0.14em] text-brand">{p.tag}</span>
+                    <span className="small">·</span>
+                    <span className="small">{p.year}</span>
+                  </div>
+
+                  <h3 className="font-display text-[clamp(1.5rem,3.6vw,2.6rem)] font-semibold leading-[1.1] tracking-[-0.025em] transition-all duration-300 group-hover:translate-x-2 group-hover:text-brand-light">
+                    {p.name}
+                  </h3>
+
+                  <span className="small mt-1.5 block">
+                    {p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                   </span>
+
+                  {/* inline preview for touch / small screens */}
+                  <div
+                    className="mt-5 h-[180px] w-full overflow-hidden rounded-xl border sm:h-[220px] lg:hidden"
+                    style={{ borderColor: "var(--border)", background: "#131317" }}
+                  >
+                    <ProjectShot
+                      id={p.id}
+                      name={p.name}
+                      shot={p.shot}
+                      accent={p.accent}
+                      accent2={p.accent2}
+                    />
+                  </div>
                 </div>
+
                 <span
-                  className="absolute left-3.5 top-3.5 flex items-center gap-1.5 rounded-full border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-wider text-white backdrop-blur-md"
-                  style={{ borderColor: "var(--border-2)", background: "#131317b3" }}
+                  aria-hidden
+                  className="grid h-12 w-12 shrink-0 place-items-center rounded-full border text-brand transition-all duration-300 group-hover:bg-grad group-hover:text-bg"
+                  style={{ borderColor: "var(--border-2)" }}
                 >
-                  <ShopifyMark className="h-3.5 w-3.5" />
-                  {p.tag}
-                </span>
-                <span
-                  className="absolute right-3.5 top-3.5 grid h-8 w-8 place-items-center rounded-full border text-white opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100"
-                  style={{ borderColor: "var(--border-2)", background: "#131317b3" }}
-                >
-                  <ArrowUpRight size={15} strokeWidth={2.2} />
+                  <ArrowUpRight size={20} strokeWidth={2.2} />
                 </span>
               </div>
-
-              {/* body */}
-              <div className="flex flex-1 flex-col p-6">
-                <h3 className="mb-1.5 text-[1.2rem]">{p.name}</h3>
-                <span className="mb-3 text-[0.82rem] text-brand">
-                  {p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                </span>
-                <p className="mb-5 text-[0.9rem] text-dim">{p.desc}</p>
-
-                <div className="mt-auto flex flex-wrap gap-2">
-                  {p.stack.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-lg border bg-surface-2 px-2.5 py-1 text-[0.74rem] text-dim"
-                      style={{ borderColor: "var(--border)" }}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.a>
+            </a>
           </Reveal>
         ))}
       </div>

@@ -32,7 +32,7 @@ export default function About() {
           {/* body */}
           <div className="text-center md:text-left">
             <span className="eyebrow">ABOUT ME</span>
-            <h2 className="text-[clamp(1.8rem,4vw,2.7rem)]">
+            <h2 className="h2">
               I Build Solutions,<br />That Make an <span className="grad-text">Impact.</span>
             </h2>
             <p className="text-dim my-4 md:my-5">

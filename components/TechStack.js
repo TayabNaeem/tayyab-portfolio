@@ -29,7 +29,7 @@ export default function TechStack({ hideHeading = false }) {
       {!hideHeading && (
         <Reveal className="mb-12">
           <span className="eyebrow">TECH STACK</span>
-          <h2 className="text-[clamp(1.8rem,4vw,2.7rem)]">
+          <h2 className="h2">
             Tools I <span className="grad-text">build with.</span>
           </h2>
         </Reveal>

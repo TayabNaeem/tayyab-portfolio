@@ -1,68 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { Bot, Workflow, LayoutTemplate, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Reveal from "./Reveal";
-import { ShopifyMark, WordPressMark, MetaMark } from "./BrandLogos";
-
-const SERVICES = [
-  {
-    no: "01",
-    Icon: ShopifyMark,
-    brand: true,
-    title: "Shopify Development",
-    desc: "Theme customization and custom Liquid development, with a professional design and the speed to match.",
-    tags: [
-      "Theme customization",
-      "Custom Liquid dev",
-      "Speed optimization",
-      "App integration",
-      "Professional design",
-    ],
-  },
-  {
-    no: "02",
-    Icon: WordPressMark,
-    title: "WordPress Development",
-    desc: "Bespoke themes, WooCommerce stores and page-builder sites your team can actually maintain.",
-    tags: ["Custom themes", "WooCommerce", "Elementor", "Speed"],
-  },
-  {
-    no: "03",
-    Icon: Bot,
-    title: "AI Chatbot & Voice Agents",
-    desc: "LLM assistants that answer, qualify and sell — plus voice agents that handle calls end to end.",
-    tags: ["Botpress", "Voiceflow", "Vapi", "RAG"],
-  },
-  {
-    no: "04",
-    Icon: Workflow,
-    title: "Automations",
-    desc: "Workflows that quietly remove manual work — syncing orders, data and alerts across your stack.",
-    tags: ["n8n", "Make.com", "Zapier", "APIs"],
-  },
-  {
-    no: "05",
-    Icon: MetaMark,
-    title: "Meta Ads",
-    desc: "Facebook and Instagram campaigns built around creative testing, clean tracking and real ROAS.",
-    tags: ["Campaign setup", "Pixel & CAPI", "Creative testing", "Scaling"],
-  },
-  {
-    no: "06",
-    Icon: LayoutTemplate,
-    title: "Landing Pages",
-    desc: "High-converting pages designed around a single offer, wired to your analytics from day one.",
-    tags: ["Next.js", "Copy structure", "A/B testing", "Analytics"],
-  },
-];
+import ServiceIcon from "./ServiceIcon";
+import { SERVICES } from "@/lib/services";
 
 function Row({ s, i }) {
-  const { Icon } = s;
   return (
     <Reveal delay={(i % 3) * 0.06}>
-      <div
-        className="group relative overflow-hidden border-b"
+      <Link
+        href={`/services/${s.slug}`}
+        className="group relative block overflow-hidden border-b"
         style={{ borderColor: "var(--border)" }}
       >
         {/* hover wash */}
@@ -81,26 +30,24 @@ function Row({ s, i }) {
         />
 
         <div className="relative grid items-start gap-5 px-1 py-9 sm:px-5 md:grid-cols-[auto_1fr_auto] md:items-center md:gap-10 md:px-8">
-          {/* number */}
           <span className="font-display text-[1.6rem] font-bold leading-none text-white/15 transition-colors duration-300 group-hover:text-brand md:text-[2rem]">
             {s.no}
           </span>
 
-          {/* body */}
           <div className="min-w-0">
             <div className="mb-2.5 flex items-center gap-3.5">
               <span
                 className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border bg-surface-2 text-brand transition-colors duration-300 group-hover:border-brand group-hover:bg-brand/10"
                 style={{ borderColor: "var(--border)" }}
               >
-                <Icon className="h-5 w-5" {...(s.brand ? {} : { strokeWidth: 1.7 })} />
+                <ServiceIcon icon={s.icon} />
               </span>
-              <h3 className="text-[clamp(1.15rem,2.2vw,1.5rem)] transition-transform duration-300 group-hover:translate-x-1">
+              <h3 className="h3 transition-transform duration-300 group-hover:translate-x-1">
                 {s.title}
               </h3>
             </div>
 
-            <p className="max-w-[620px] text-[0.94rem] text-dim">{s.desc}</p>
+            <p className="body max-w-[620px]">{s.short}</p>
 
             <div className="mt-4 flex flex-wrap gap-2">
               {s.tags.map((t) => (
@@ -115,7 +62,6 @@ function Row({ s, i }) {
             </div>
           </div>
 
-          {/* arrow */}
           <span
             aria-hidden
             className="hidden h-12 w-12 shrink-0 -translate-x-2.5 place-items-center rounded-full bg-grad text-bg opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 md:grid"
@@ -123,7 +69,7 @@ function Row({ s, i }) {
             <ArrowUpRight size={20} strokeWidth={2.4} />
           </span>
         </div>
-      </div>
+      </Link>
     </Reveal>
   );
 }
@@ -135,10 +81,10 @@ export default function Services({ hideHeading = false }) {
         <Reveal className="mb-12 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <span className="eyebrow">SERVICES</span>
-            <h2 className="text-[clamp(1.8rem,4vw,2.7rem)]">
+            <h2 className="h2">
               What I do <span className="grad-text">best.</span>
             </h2>
-            <p className="mt-4 max-w-[540px] text-dim">
+            <p className="lead mt-4 max-w-[540px]">
               Storefronts and sites that sell, assistants that talk, and systems that run
               themselves — built end to end.
             </p>
@@ -151,7 +97,7 @@ export default function Services({ hideHeading = false }) {
 
       <div className="border-t" style={{ borderColor: "var(--border)" }}>
         {SERVICES.map((s, i) => (
-          <Row key={s.no} s={s} i={i} />
+          <Row key={s.slug} s={s} i={i} />
         ))}
       </div>
     </section>
