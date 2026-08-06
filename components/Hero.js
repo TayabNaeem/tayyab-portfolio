@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ShopifyMark, BotpressMark, N8nMark } from "./BrandLogos";
+import { ShopifyMark, BotpressMark } from "./BrandLogos";
 import LogoMarquee from "./LogoMarquee";
 
 // Floating platform logos that orbit the portrait — logo only, large
 const BADGES = [
   { Mark: ShopifyMark, label: "Shopify", pos: { top: "3%", left: "-7%" }, z: 30, d: 5 },
   { Mark: BotpressMark, label: "Botpress", pos: { bottom: "30%", right: "-9%" }, z: 30, d: 6.2 },
-  { Mark: N8nMark, label: "n8n", pos: { bottom: "1%", left: "-5%" }, z: 30, d: 7, wide: true },
+  { src: "/assets/logos/n8n-mark.png", label: "n8n", pos: { bottom: "1%", left: "-5%" }, z: 30, d: 7 },
 ];
 
 const container = {
@@ -160,7 +160,11 @@ export default function Hero() {
                 y: { duration: b.d, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 },
               }}
             >
-              <b.Mark className={b.wide ? "h-9 w-auto" : "h-9 w-9"} />
+              {b.src ? (
+                <img src={b.src} alt="" className="h-9 w-auto" />
+              ) : (
+                <b.Mark className="h-9 w-9" />
+              )}
               <span className="sr-only">{b.label}</span>
             </motion.div>
           ))}
