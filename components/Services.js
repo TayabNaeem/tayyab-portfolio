@@ -11,8 +11,14 @@ const SERVICES = [
     Icon: ShopifyMark,
     brand: true,
     title: "Shopify Development",
-    desc: "Custom themes, Liquid and headless storefronts built to load fast and turn browsers into buyers.",
-    tags: ["Liquid", "Hydrogen", "CRO", "App integrations"],
+    desc: "Theme customization and custom Liquid development, with a professional design and the speed to match.",
+    tags: [
+      "Theme customization",
+      "Custom Liquid dev",
+      "Speed optimization",
+      "App integration",
+      "Professional design",
+    ],
   },
   {
     no: "02",

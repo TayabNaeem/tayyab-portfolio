@@ -20,7 +20,7 @@ const PROJECTS = [
     logoOpaque: true, // JPG with a baked-in white background
     tag: "Automotive",
     desc: "Shopify storefront for a car acoustic-insulation brand — organised by product series with vehicle-specific pre-cut kits.",
-    stack: ["Shopify", "Liquid", "CRO"],
+    stack: ["Shopify", "Liquid", "Theme customization"],
     accent: "#a855f7",
     accent2: "#6d28d9",
   },

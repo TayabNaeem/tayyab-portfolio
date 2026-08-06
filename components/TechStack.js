@@ -9,7 +9,7 @@ const GROUPS = [
   {
     Icon: ShopifyMark,
     title: "Shopify & Commerce",
-    items: ["Shopify Liquid", "Hydrogen", "Shopify APIs", "Next.js", "React", "Tailwind"],
+    items: ["Shopify Liquid", "WordPress", "WooCommerce", "Shopify APIs", "Next.js", "Tailwind"],
   },
   {
     Icon: ChatbotIcon,
