@@ -9,14 +9,14 @@ export default function RichText() {
   return (
     <section className="shell py-28 text-center md:py-36">
       <Reveal>
-        <span className="eyebrow">WHAT I DO</span>
+        <span className="eyebrow">THE POINT</span>
       </Reveal>
 
       <Reveal delay={0.05}>
-        <p className="mx-auto max-w-[1100px] font-display text-[clamp(2rem,5.2vw,4.2rem)] font-semibold leading-[1.14] tracking-[-0.03em]">
-          Storefronts that <span className="grad-text">sell</span>, assistants that{" "}
-          <span className="grad-text">answer</span>, systems that{" "}
-          <span className="grad-text">run themselves</span>.
+        <p className="mx-auto max-w-[1150px] font-display text-[clamp(2.3rem,6vw,5rem)] font-bold leading-[1.06] tracking-[-0.035em]">
+          I don&apos;t build websites.
+          <br className="hidden sm:block" />{" "}
+          <span className="grad-text">I build machines that sell.</span>
         </p>
       </Reveal>
 
