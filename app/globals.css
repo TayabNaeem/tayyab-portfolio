@@ -88,16 +88,14 @@
            whitespace-nowrap border border-transparent transition-all duration-200 cursor-pointer;
   }
   .btn-primary {
-    @apply text-white shadow-glow;
-    /* Slightly deeper than --grad so white text stays legible on the light end */
-    background: linear-gradient(115deg, #9333ea 0%, #6d28d9 100%);
+    @apply bg-grad text-bg shadow-glow;
   }
   .btn-primary:hover {
     @apply -translate-y-0.5;
     box-shadow: 0 16px 46px -10px rgba(168, 85, 247, 0.6);
   }
   .btn-ghost {
-    @apply bg-transparent text-white;
+    @apply bg-transparent text-[#f4f4f5];
     border-color: var(--border-2);
   }
   .btn-ghost:hover {
