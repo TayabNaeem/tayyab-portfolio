@@ -71,7 +71,7 @@ export default function CTA() {
 
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="inline-flex items-center justify-center gap-2 rounded-full border px-6 py-3.5 text-[0.92rem] font-medium text-dim transition-all hover:-translate-y-0.5 hover:border-brand hover:text-white"
+                className="inline-flex items-center justify-center gap-2 rounded-full border px-6 py-3.5 text-[0.92rem] font-medium text-white transition-all hover:-translate-y-0.5 hover:border-brand"
                 style={{ borderColor: "var(--border-2)" }}
               >
                 <Mail size={16} strokeWidth={1.9} />
