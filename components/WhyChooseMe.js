@@ -54,37 +54,42 @@ function Card({ p, i }) {
           }}
         />
 
+        {/* frosted glass surface */}
         <div
-          className="relative flex h-full flex-col items-center overflow-hidden rounded-[22px] border bg-surface px-7 py-9 text-center transition-transform duration-300 group-hover:-translate-y-1.5"
-          style={{ borderColor: "var(--border)" }}
+          className="relative flex h-full flex-col items-center overflow-hidden rounded-[22px] px-7 py-10 text-center backdrop-blur-xl transition-transform duration-300 group-hover:-translate-y-1.5"
+          style={{
+            background:
+              "linear-gradient(160deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025) 55%, rgba(255,255,255,0.015))",
+            border: "1px solid rgba(255,255,255,0.10)",
+            boxShadow: "0 12px 40px -18px rgba(0,0,0,0.9)",
+          }}
         >
-          {/* glow from the top on hover */}
+          {/* top edge highlight, the giveaway that it is glass */}
           <span
             aria-hidden
-            className="pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            className="pointer-events-none absolute inset-x-6 top-0 h-px"
             style={{
-              background: "radial-gradient(circle, rgba(168,85,247,0.35), transparent 70%)",
-              filter: "blur(30px)",
+              background:
+                "linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)",
             }}
           />
 
           {/* index */}
-          <span className="relative mb-5 font-display text-[0.72rem] font-bold tracking-[0.22em] text-mute transition-colors duration-300 group-hover:text-brand">
+          <span className="relative mb-6 font-display text-[0.72rem] font-bold tracking-[0.22em] text-mute transition-colors duration-300 group-hover:text-brand">
             {n}
           </span>
 
-          {/* icon */}
+          {/* bare icon, no tile */}
           <span
-            className="relative mb-6 grid h-16 w-16 place-items-center rounded-2xl border bg-surface-2 text-brand transition-all duration-300 group-hover:scale-105 group-hover:border-brand"
-            style={{ borderColor: "var(--border-2)" }}
+            className="relative mb-6 text-brand transition-transform duration-300 group-hover:scale-110"
+            style={{ filter: "drop-shadow(0 6px 18px rgba(168,85,247,0.45))" }}
           >
-            <p.Icon size={26} strokeWidth={1.6} />
+            <p.Icon size={46} strokeWidth={1.35} />
           </span>
 
           <h3 className="h3 relative mb-2.5">{p.title}</h3>
           <p className="body relative">{p.desc}</p>
 
-          {/* underline accent */}
           <span
             aria-hidden
             className="relative mt-6 h-[2px] w-0 rounded-full bg-grad transition-all duration-300 group-hover:w-12"
@@ -97,8 +102,26 @@ function Card({ p, i }) {
 
 export default function WhyChooseMe() {
   return (
-    <section id="why-me" className="shell py-24">
-      <Reveal className="mx-auto mb-14 max-w-[620px] text-center">
+    <section id="why-me" className="relative shell py-24">
+      {/* colour behind the grid so the glass has something to refract */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <span
+          className="absolute left-[8%] top-[26%] h-[420px] w-[420px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(168,85,247,0.30), transparent 68%)",
+            filter: "blur(70px)",
+          }}
+        />
+        <span
+          className="absolute bottom-[8%] right-[10%] h-[380px] w-[380px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(109,40,217,0.28), transparent 68%)",
+            filter: "blur(80px)",
+          }}
+        />
+      </div>
+
+      <Reveal className="relative mx-auto mb-14 max-w-[620px] text-center">
         <span className="eyebrow">WHY WORK WITH ME</span>
         <h2 className="h2">
           What you actually <span className="grad-text">get.</span>
@@ -109,7 +132,7 @@ export default function WhyChooseMe() {
         </p>
       </Reveal>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="relative grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {POINTS.map((p, i) => (
           <Card key={p.title} p={p} i={i} />
         ))}
