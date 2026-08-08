@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowUpRight, ClipboardList, PenTool, Rocket } from "lucide-react";
+import { ClipboardList, PenTool, Rocket } from "lucide-react";
 import Reveal from "./Reveal";
 
 const STEPS = [
@@ -9,21 +8,21 @@ const STEPS = [
     no: "01",
     Icon: ClipboardList,
     title: "Pick a plan",
-    desc: "Tell me what you need and pick the scope that fits. No discovery calls that go nowhere — you get a fixed plan and a clear price before anything starts.",
+    desc: "Tell me what you need. You get a fixed scope and price before anything starts.",
     meta: "Day 1",
   },
   {
     no: "02",
     Icon: PenTool,
     title: "Receive your design",
-    desc: "I send the design and structure for review. You give notes, I revise, and nothing gets built until you're happy with what it's going to look like.",
-    meta: "Days 2–5",
+    desc: "I send the design for review. You give notes, I revise until it feels right.",
+    meta: "Days 2 to 5",
   },
   {
     no: "03",
     Icon: Rocket,
     title: "Launch in 2 weeks",
-    desc: "Approved design gets built, tested and shipped — typically inside two weeks, with handover so your team can run it from there.",
+    desc: "Approved work gets built, tested and shipped, with a handover for your team.",
     meta: "Week 2",
   },
 ];
@@ -31,13 +30,13 @@ const STEPS = [
 export default function HowItWorks() {
   return (
     <section id="how-it-works" className="shell py-24">
-      <Reveal className="mb-14 max-w-[620px]">
+      <Reveal className="mx-auto mb-14 max-w-[620px] text-center">
         <span className="eyebrow">HOW IT WORKS</span>
         <h2 className="h2">
           Three steps, <span className="grad-text">two weeks.</span>
         </h2>
         <p className="lead mt-4">
-          No drawn-out timelines or surprise invoices. Here&apos;s exactly how a project runs from
+          No drawn out timelines or surprise invoices. Here is exactly how a project runs from
           the day you say go.
         </p>
       </Reveal>
@@ -81,18 +80,29 @@ export default function HowItWorks() {
                   {s.meta}
                 </span>
                 <h3 className="h3 mb-2.5">{s.title}</h3>
-                <p className="body mx-auto max-w-[340px]">{s.desc}</p>
+                <p className="body mx-auto max-w-[320px]">{s.desc}</p>
               </div>
             </Reveal>
           ))}
         </div>
       </div>
 
+      {/* availability badge */}
       <Reveal delay={0.2}>
         <div className="mt-14 flex justify-center">
-          <Link href="/contact" className="btn btn-primary">
-            Start your project <ArrowUpRight size={15} strokeWidth={2.2} />
-          </Link>
+          <span
+            className="inline-flex items-center gap-3 rounded-full border px-5 py-2.5 backdrop-blur-md"
+            style={{ borderColor: "var(--border-2)", background: "rgba(168,85,247,0.08)" }}
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-70" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand" />
+            </span>
+            <span className="text-[0.88rem] font-semibold text-white">
+              Limited slots available
+            </span>
+            <span className="text-[0.88rem] text-dim">Booking new projects this month</span>
+          </span>
         </div>
       </Reveal>
     </section>
