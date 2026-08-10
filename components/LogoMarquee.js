@@ -7,6 +7,7 @@
  */
 const LOGOS = [
   { name: "Shopify", src: "/assets/logos/shopify.png", ratio: 3.45 },
+  { name: "WordPress", src: "/assets/logos/wordpress.png", ratio: 4.4 },
   { name: "Botpress", src: "/assets/logos/botpress.png", ratio: 3.81 },
   { name: "Voiceflow", src: "/assets/logos/voiceflow.png", ratio: 5.49 },
   { name: "Vapi", src: "/assets/logos/vapi.png", ratio: 3.13 },

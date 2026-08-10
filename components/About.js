@@ -8,7 +8,7 @@ import ProfileImage from "./ProfileImage";
 const STATS = [
   { to: 50, label: "Projects Completed" },
   { to: 30, label: "Happy Clients" },
-  { to: 3, label: "Years Experience" },
+  { to: 4, label: "Years Experience" },
   { to: 15, label: "Automations Built" },
 ];
 

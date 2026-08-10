@@ -59,8 +59,8 @@ function Card({ p, i }) {
           className="relative flex h-full flex-col items-center overflow-hidden rounded-[22px] px-7 py-10 text-center backdrop-blur-xl transition-transform duration-300 group-hover:-translate-y-1.5"
           style={{
             background:
-              "linear-gradient(160deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025) 55%, rgba(255,255,255,0.015))",
-            border: "1px solid rgba(255,255,255,0.10)",
+              "linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.035) 55%, rgba(255,255,255,0.02))",
+            border: "1px solid rgba(255,255,255,0.12)",
             boxShadow: "0 12px 40px -18px rgba(0,0,0,0.9)",
           }}
         >
@@ -102,26 +102,8 @@ function Card({ p, i }) {
 
 export default function WhyChooseMe() {
   return (
-    <section id="why-me" className="relative shell py-24">
-      {/* colour behind the grid so the glass has something to refract */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <span
-          className="absolute left-[8%] top-[26%] h-[420px] w-[420px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, rgba(168,85,247,0.30), transparent 68%)",
-            filter: "blur(70px)",
-          }}
-        />
-        <span
-          className="absolute bottom-[8%] right-[10%] h-[380px] w-[380px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, rgba(109,40,217,0.28), transparent 68%)",
-            filter: "blur(80px)",
-          }}
-        />
-      </div>
-
-      <Reveal className="relative mx-auto mb-14 max-w-[620px] text-center">
+    <section id="why-me" className="shell py-24">
+      <Reveal className="mx-auto mb-14 max-w-[620px] text-center">
         <span className="eyebrow">WHY WORK WITH ME</span>
         <h2 className="h2">
           What you actually <span className="grad-text">get.</span>
@@ -132,7 +114,7 @@ export default function WhyChooseMe() {
         </p>
       </Reveal>
 
-      <div className="relative grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {POINTS.map((p, i) => (
           <Card key={p.title} p={p} i={i} />
         ))}

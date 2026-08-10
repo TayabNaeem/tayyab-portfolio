@@ -7,7 +7,7 @@ import CTA from "@/components/CTA";
 export const metadata = {
   title: "About",
   description:
-    "About Tayyab Naeem — Shopify Developer, AI Chatbot Developer and AI Automation Engineer with 3+ years building commerce and automation systems.",
+    "About Tayyab Naeem — Shopify Developer, AI Chatbot Developer and AI Automation Engineer with 4+ years building commerce and automation systems.",
 };
 
 export default function AboutPage() {

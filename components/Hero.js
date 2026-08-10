@@ -230,7 +230,7 @@ export default function Hero() {
             className="absolute right-[2%] top-[14%] z-[4] flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-soft backdrop-blur-md bg-[#151517d9]"
             style={{ borderColor: "var(--border-2)" }}
           >
-            <strong className="font-display text-[1.9rem] leading-none text-brand">3+</strong>
+            <strong className="font-display text-[1.9rem] leading-none text-brand">4+</strong>
             <span className="text-[0.78rem] text-dim leading-tight">
               Years of<br />Experience
             </span>
