@@ -16,7 +16,7 @@ export default function Home() {
       {/* Hero already renders the logo marquee full-bleed beneath it */}
       <Hero />
       <RichText />
-      <Portfolio />
+      <Portfolio limit={6} />
       <TopProducts />
       <HowItWorks />
       <WhyChooseMe />

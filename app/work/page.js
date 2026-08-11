@@ -15,11 +15,11 @@ export default function WorkPage() {
     <PageTransition>
       <PageHeader
         eyebrow="Portfolio"
-        title="Projects that"
-        accent="delivered results."
-        subtitle="A selection of storefronts, assistants and automation pipelines — with the numbers they moved."
+        title="Work I have"
+        accent="shipped."
+        subtitle="Live client stores, grouped by the kind of build. Hover any project to preview it, click to visit the real thing."
       />
-      <Portfolio hideHeading />
+      <Portfolio hideHeading grouped />
       <Testimonials />
       <CTA />
     </PageTransition>
