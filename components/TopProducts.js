@@ -6,12 +6,12 @@ import Reveal from "./Reveal";
 import ServiceIcon from "./ServiceIcon";
 
 /**
- * The three offerings clients ask for most. Prices are intentionally left as
- * "on request" — set them in one place here once you've decided.
+ * The three ways most engagements start. Icons use the line-art `store` key so
+ * they sit consistently beside the lucide icons in this section.
  */
 const PRODUCTS = [
   {
-    icon: "shopify",
+    icon: "store",
     slug: "shopify-development",
     name: "Shopify Store Build",
     tagline: "A storefront that looks built for your brand — and loads like it.",
@@ -40,7 +40,7 @@ const PRODUCTS = [
   {
     icon: "workflow",
     slug: "automations",
-    name: "Automation Package",
+    name: "Automation Sprint",
     tagline: "The repetitive work between your tools, running without you.",
     points: [
       "Process mapped before building",
@@ -55,14 +55,14 @@ const PRODUCTS = [
 export default function TopProducts() {
   return (
     <section id="products" className="shell py-24">
-      <Reveal className="mb-12 max-w-[620px]">
-        <span className="eyebrow">MOST REQUESTED</span>
+      <Reveal className="mx-auto mb-12 max-w-[620px] text-center">
+        <span className="eyebrow">START HERE</span>
         <h2 className="h2">
-          Top three <span className="grad-text">packages.</span>
+          Three ways to <span className="grad-text">work together.</span>
         </h2>
         <p className="lead mt-4">
-          The work clients come to me for most often, scoped so you know exactly what you&apos;re
-          getting before we start.
+          Where most projects begin. Each one is scoped up front, so you know exactly what
+          you are getting before we start.
         </p>
       </Reveal>
 
