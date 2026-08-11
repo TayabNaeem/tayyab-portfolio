@@ -1,12 +1,11 @@
 "use client";
 
 import { Bot, Workflow, LayoutTemplate } from "lucide-react";
-import { ShopifyMark, ShopifyGlyph, WordPressMark, MetaMark } from "./BrandLogos";
+import { ShopifyGlyph, WordPressMark, MetaMark } from "./BrandLogos";
 
 const MAP = {
-  shopify: { C: ShopifyMark, brand: true },
   // Monochrome Shopify bag, picks up the surrounding colour
-  store: { C: ShopifyGlyph, brand: true },
+  shopify: { C: ShopifyGlyph, brand: true },
   wordpress: { C: WordPressMark },
   bot: { C: Bot },
   workflow: { C: Workflow },

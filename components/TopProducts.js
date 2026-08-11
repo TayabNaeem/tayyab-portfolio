@@ -5,13 +5,10 @@ import { ArrowUpRight, Check, Star } from "lucide-react";
 import Reveal from "./Reveal";
 import ServiceIcon from "./ServiceIcon";
 
-/**
- * The three ways most engagements start. Icons use the line-art `store` key so
- * they sit consistently beside the lucide icons in this section.
- */
+/** The three ways most engagements start. */
 const PRODUCTS = [
   {
-    icon: "store",
+    icon: "shopify",
     slug: "shopify-development",
     name: "Shopify Store Build",
     tagline: "A storefront that looks built for your brand — and loads like it.",

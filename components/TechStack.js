@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 import { ChatbotIcon, AutomationIcon } from "./Icons";
-import { ShopifyMark } from "./BrandLogos";
+import { ShopifyGlyph } from "./BrandLogos";
 
 const GROUPS = [
   {
-    Icon: ShopifyMark,
+    Icon: ShopifyGlyph,
     title: "Shopify & Commerce",
     items: ["Shopify Liquid", "WordPress", "WooCommerce", "Shopify APIs", "Next.js", "Tailwind"],
   },
