@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import ProjectShot from "./ProjectShot";
 
 /**
@@ -9,30 +10,39 @@ import ProjectShot from "./ProjectShot";
  *   video → plays the site scrolling
  *   shot  → a tall screenshot, panned slowly to imitate scrolling
  *   else  → the generated SVG mockup, held still (nothing real to pan)
+ *
+ * Hovering a screen freezes whatever is playing on it, so a visitor can stop
+ * and read.
  */
 function Screen({ project, phone = false }) {
   const { video, shot } = project;
+  const videoRef = useRef(null);
 
   if (video) {
     return (
       <video
+        ref={videoRef}
         src={video}
         autoPlay
         muted
         loop
         playsInline
-        className="h-full w-full object-cover object-top"
+        onMouseEnter={() => videoRef.current?.pause()}
+        onMouseLeave={() => videoRef.current?.play()}
+        className="h-full w-full cursor-pointer object-cover object-top"
       />
     );
   }
 
   if (shot) {
     return (
-      <div className="h-full w-full overflow-hidden">
+      <div className="group/screen h-full w-full overflow-hidden">
         <img
           src={shot}
           alt={`${project.name} site`}
-          className={phone ? "animate-site-scroll-slow w-full" : "animate-site-scroll w-full"}
+          className={`w-full ${
+            phone ? "animate-site-scroll-slow" : "animate-site-scroll"
+          } group-hover/screen:[animation-play-state:paused]`}
           style={{ display: "block" }}
         />
       </div>
@@ -68,7 +78,6 @@ export default function DeviceMockup({ project }) {
           className="relative overflow-hidden rounded-t-2xl border border-b-0 p-2.5 pb-0 shadow-soft"
           style={{ borderColor: "rgba(255,255,255,0.14)", background: "#1a1a1f" }}
         >
-          {/* camera notch */}
           <span
             aria-hidden
             className="absolute left-1/2 top-[5px] h-1 w-1 -translate-x-1/2 rounded-full"
@@ -79,7 +88,6 @@ export default function DeviceMockup({ project }) {
             style={{ background: "#131317" }}
           >
             <Screen project={project} />
-            {/* screen sheen */}
             <span
               aria-hidden
               className="pointer-events-none absolute inset-0"
@@ -93,7 +101,7 @@ export default function DeviceMockup({ project }) {
 
         {/* laptop base */}
         <div
-          className="relative mx-auto h-[14px] w-[112%] -translate-x-[5.3%] rounded-b-xl border border-t-0"
+          className="relative mx-auto h-[14px] w-[110%] -translate-x-[4.6%] rounded-b-xl border border-t-0"
           style={{
             borderColor: "rgba(255,255,255,0.12)",
             background: "linear-gradient(180deg,#26262c,#141418)",
@@ -109,11 +117,11 @@ export default function DeviceMockup({ project }) {
 
       {/* phone */}
       <div
-        className="absolute -bottom-6 right-[-2%] w-[23%] overflow-hidden rounded-[1.5rem] border p-1.5 shadow-soft sm:w-[21%]"
+        className="absolute -bottom-5 right-[2%] w-[20%] overflow-hidden rounded-[1.4rem] border p-1.5 shadow-soft"
         style={{ borderColor: "rgba(255,255,255,0.16)", background: "#1a1a1f" }}
       >
         <div
-          className="relative aspect-[9/19] w-full overflow-hidden rounded-[1.1rem]"
+          className="relative aspect-[9/19] w-full overflow-hidden rounded-[1rem]"
           style={{ background: "#131317" }}
         >
           <Screen project={project} phone />

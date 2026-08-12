@@ -7,7 +7,6 @@ import Reveal from "./Reveal";
 import DeviceMockup from "./DeviceMockup";
 import { PROJECTS } from "@/lib/projects";
 
-
 /* ---------- one project's copy ---------- */
 
 function Details({ p, index, total }) {
@@ -15,7 +14,7 @@ function Details({ p, index, total }) {
     // Plain element, not motion: a keyed motion node left the outgoing copy
     // behind in the DOM. The entrance replays via CSS on remount instead.
     <div className="slide-in min-w-0">
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-5 flex items-center gap-3">
         <span className="font-display text-[0.8rem] font-bold tracking-[0.2em] text-brand">
           {String(index + 1).padStart(2, "0")}
         </span>
@@ -25,7 +24,7 @@ function Details({ p, index, total }) {
 
       <span className="small mb-3 block uppercase tracking-[0.16em] text-brand">{p.tag}</span>
 
-      <h3 className="font-display text-[clamp(2rem,4.4vw,3.4rem)] font-bold leading-[1.06] tracking-[-0.03em]">
+      <h3 className="font-display text-[clamp(1.8rem,3.4vw,2.9rem)] font-bold leading-[1.06] tracking-[-0.03em]">
         {p.name}
       </h3>
 
@@ -33,18 +32,29 @@ function Details({ p, index, total }) {
         href={p.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="small mt-3 inline-block transition-colors hover:text-brand-light"
+        className="small mt-2.5 inline-block transition-colors hover:text-brand-light"
       >
         {p.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
       </a>
 
+      {p.desc && <p className="body mt-5 max-w-[440px]">{p.desc}</p>}
+
+      {p.tags?.length > 0 && (
+        <div className="mt-5 flex flex-wrap gap-2">
+          {p.tags.map((t) => (
+            <span
+              key={t}
+              className="rounded-lg border bg-surface-2 px-2.5 py-1 text-[0.75rem] text-dim"
+              style={{ borderColor: "var(--border)" }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      )}
+
       <div className="mt-8 flex flex-wrap gap-3">
-        <a
-          href={p.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-primary"
-        >
+        <a href={p.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
           Visit store <ArrowUpRight size={15} strokeWidth={2.2} />
         </a>
         <Link href="/work" className="btn btn-ghost">
@@ -73,13 +83,9 @@ function Dots({ items, active, onPick }) {
             className="group relative grid place-items-center p-1"
           >
             <span
-              className={`rounded-full transition-all duration-300 ${
-                on ? "bg-grad" : "bg-white/25 group-hover:bg-white/50"
+              className={`w-1.5 rounded-full transition-all duration-300 ${
+                on ? "h-7 bg-grad" : "h-1.5 bg-white/25 group-hover:bg-white/50"
               }`}
-              style={{
-                width: on ? 6 : 6,
-                height: on ? 26 : 6,
-              }}
             />
           </button>
         );
@@ -90,7 +96,22 @@ function Dots({ items, active, onPick }) {
 
 /* ---------- section ---------- */
 
-export default function WorkShowcase({ limit = 6 }) {
+function Heading() {
+  return (
+    <Reveal className="mx-auto mb-14 max-w-[620px] text-center">
+      <span className="eyebrow">SELECTED WORK</span>
+      <h2 className="h2">
+        Stores I&apos;ve <span className="grad-text">built.</span>
+      </h2>
+      <p className="lead mt-4">
+        Live Shopify storefronts, running real traffic and real orders. Take a look at any of
+        them side by side on desktop and mobile.
+      </p>
+    </Reveal>
+  );
+}
+
+export default function WorkShowcase({ limit = 8 }) {
   const items = limit ? PROJECTS.slice(0, limit) : PROJECTS;
   const remaining = PROJECTS.length - items.length;
 
@@ -127,8 +148,10 @@ export default function WorkShowcase({ limit = 6 }) {
     const el = trackRef.current;
     if (!el) return;
     const span = el.offsetHeight - window.innerHeight;
-    const top = el.offsetTop + span * ((i + 0.5) / items.length);
-    window.scrollTo({ top, behavior: "smooth" });
+    window.scrollTo({
+      top: el.offsetTop + span * ((i + 0.5) / items.length),
+      behavior: "smooth",
+    });
   };
 
   const current = items[active];
@@ -141,24 +164,14 @@ export default function WorkShowcase({ limit = 6 }) {
         className="relative hidden lg:block"
         style={{ height: `${items.length * 100}vh` }}
       >
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+        <div className="sticky top-0 flex h-screen items-center overflow-hidden py-24">
           <div className="shell w-full">
-            <Reveal className="mb-10 flex items-end justify-between gap-6">
-              <div>
-                <span className="eyebrow">SELECTED WORK</span>
-                <h2 className="h2">
-                  Stores I&apos;ve <span className="grad-text">built.</span>
-                </h2>
-              </div>
-              <span className="small max-w-[240px] text-right">
-                Keep scrolling to move through the work
-              </span>
-            </Reveal>
+            <Heading />
 
-            <div className="flex items-center gap-10">
+            <div className="flex items-center gap-8 xl:gap-10">
               <Dots items={items} active={active} onPick={jumpTo} />
 
-              <div className="grid flex-1 items-center gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+              <div className="grid min-w-0 flex-1 items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] xl:gap-14">
                 {/* Distinct key prefixes: sibling keys must not collide, or
                     React cannot tell the two apart and leaves stale nodes. */}
                 <Details
@@ -168,7 +181,7 @@ export default function WorkShowcase({ limit = 6 }) {
                   total={PROJECTS.length}
                 />
 
-                <div key={`device-${current.id}`} className="slide-in-soft">
+                <div key={`device-${current.id}`} className="slide-in-soft min-w-0 pr-[3%]">
                   <DeviceMockup project={current} />
                 </div>
               </div>
@@ -179,23 +192,20 @@ export default function WorkShowcase({ limit = 6 }) {
 
       {/* ---------- mobile: plain stacked list, no scroll hijack ---------- */}
       <div className="shell py-24 lg:hidden">
-        <Reveal className="mb-10">
-          <span className="eyebrow">SELECTED WORK</span>
-          <h2 className="h2">
-            Stores I&apos;ve <span className="grad-text">built.</span>
-          </h2>
-        </Reveal>
+        <Heading />
 
-        <div className="space-y-14">
+        <div className="space-y-16">
           {items.map((p, i) => (
             <Reveal key={p.id} delay={(i % 3) * 0.06}>
               <div>
-                <DeviceMockup project={p} />
+                <div className="pr-[3%]">
+                  <DeviceMockup project={p} />
+                </div>
                 <div className="mt-12">
                   <span className="small mb-2 block uppercase tracking-[0.16em] text-brand">
                     {p.tag}
                   </span>
-                  <h3 className="h3 mb-2">{p.name}</h3>
+                  <h3 className="h3 mb-1.5">{p.name}</h3>
                   <a
                     href={p.url}
                     target="_blank"
@@ -205,6 +215,20 @@ export default function WorkShowcase({ limit = 6 }) {
                     {p.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
                     <ArrowUpRight size={13} strokeWidth={2.2} />
                   </a>
+                  {p.desc && <p className="body mt-4">{p.desc}</p>}
+                  {p.tags?.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {p.tags.map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-lg border bg-surface-2 px-2.5 py-1 text-[0.75rem] text-dim"
+                          style={{ borderColor: "var(--border)" }}
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </Reveal>
@@ -214,7 +238,7 @@ export default function WorkShowcase({ limit = 6 }) {
 
       {/* ---------- after the pin releases ---------- */}
       {remaining > 0 && (
-        <div className="shell pb-24 lg:pt-8">
+        <div className="shell pb-24">
           <Reveal>
             <div className="flex justify-center">
               <Link href="/work" className="btn btn-primary">

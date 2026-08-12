@@ -10,13 +10,18 @@
 
   html {
     scroll-behavior: smooth;
+    /* `clip` contains sideways overflow without creating a scroll container.
+       `hidden` here would break position: sticky further down the page.
+       The hidden line is a fallback for browsers without `clip`. */
     overflow-x: hidden;
+    overflow-x: clip;
   }
 
   body {
     @apply bg-bg text-[#f4f4f5] antialiased;
     font-family: var(--font-sans), system-ui, sans-serif;
     overflow-x: hidden;
+    overflow-x: clip;
   }
 
   h1, h2, h3, h4 {
