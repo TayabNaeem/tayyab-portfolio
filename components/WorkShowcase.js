@@ -90,21 +90,24 @@ function Dots({ items, pos, onPick }) {
             title={p.name}
             className="group relative grid place-items-center p-1"
           >
+            {/* horizontal rail on small screens */}
             <span
-              className="rounded-full"
+              className="rounded-full lg:hidden"
               style={{
                 width: `${6 + near * 22}px`,
                 height: "6px",
-                background: near > 0.05 ? "linear-gradient(115deg,#a855f7,#6d28d9)" : "rgba(255,255,255,0.25)",
+                background:
+                  near > 0.05 ? "linear-gradient(115deg,#a855f7,#6d28d9)" : "rgba(255,255,255,0.25)",
               }}
             />
+            {/* vertical rail from lg up */}
             <span
               className="hidden rounded-full lg:block"
               style={{
-                position: "absolute",
                 width: "6px",
                 height: `${6 + near * 22}px`,
-                background: near > 0.05 ? "linear-gradient(115deg,#a855f7,#6d28d9)" : "rgba(255,255,255,0.25)",
+                background:
+                  near > 0.05 ? "linear-gradient(115deg,#a855f7,#6d28d9)" : "rgba(255,255,255,0.25)",
               }}
             />
           </button>
@@ -183,17 +186,26 @@ export default function WorkShowcase({ limit = 8 }) {
               <div className="order-1 grid min-w-0 flex-1 lg:order-2">
                 {items.map((p, i) => {
                   const t = pos - i;
-                  if (Math.abs(t) > 1.02) return null;
-                  const away = Math.min(1, Math.abs(t));
+                  const away = Math.abs(t);
+                  if (away > 1) return null;
+
+                  // Hold each slide still and solid for most of its segment,
+                  // then cross-fade quickly. A long overlap made two slides
+                  // readable at once at different offsets, which looked like
+                  // the section was juddering.
+                  const HOLD = 0.7;
+                  const fade = away <= HOLD ? 0 : (away - HOLD) / (1 - HOLD);
+                  const dir = t === 0 ? 0 : Math.sign(t);
+
                   return (
                     <div
                       key={p.id}
                       aria-hidden={i !== activeIndex}
                       style={{
                         gridArea: "1 / 1",
-                        opacity: 1 - away,
-                        transform: `translateY(${t * -34}px) scale(${1 - away * 0.03})`,
-                        pointerEvents: away < 0.5 ? "auto" : "none",
+                        opacity: 1 - fade,
+                        transform: `translateY(${-dir * fade * 16}px) scale(${1 - fade * 0.02})`,
+                        pointerEvents: fade === 0 ? "auto" : "none",
                         willChange: "opacity, transform",
                       }}
                       className="grid min-w-0 items-center gap-7 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14"

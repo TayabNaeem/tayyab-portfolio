@@ -147,9 +147,78 @@
   to { opacity: 1; transform: none; }
 }
 
-/* Ring around the custom screen cursor */
-.animate-spin-cursor {
+/* ---------- site wide custom cursor ---------- */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none !important;
+}
+/* keep the caret where people actually type */
+.has-custom-cursor input,
+.has-custom-cursor textarea {
+  cursor: text !important;
+}
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #a855f7;
+  transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
+}
+.cursor-dot[data-mode="link"] { width: 0; height: 0; }
+.cursor-dot[data-mode="pause"] { width: 0; height: 0; }
+
+.cursor-ring {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9999px;
+  border: 1px solid rgba(168, 85, 247, 0.85);
+  background: rgba(168, 85, 247, 0.08);
+  backdrop-filter: blur(2px);
+  /* the trail: position eases toward the dot */
+  transition:
+    transform 0.13s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.22s ease,
+    height 0.22s ease,
+    background 0.22s ease,
+    opacity 0.2s ease;
+}
+.cursor-ring[data-mode="link"] {
+  width: 46px;
+  height: 46px;
+  background: rgba(168, 85, 247, 0.18);
+}
+.cursor-ring[data-mode="pause"] {
+  width: 56px;
+  height: 56px;
+  background: rgba(168, 85, 247, 0.32);
+  border-style: dashed;
   animation: spin 5s linear infinite;
+}
+
+.cursor-glyph {
+  width: 15px;
+  height: 15px;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.cursor-ring[data-mode="pause"] .cursor-glyph { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ring { transition: opacity 0.2s ease; animation: none; }
 }
 
 /* Slow vertical pan of a tall screenshot, imitating a page scroll */

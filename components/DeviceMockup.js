@@ -1,51 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Pause } from "lucide-react";
 import ProjectShot from "./ProjectShot";
-
-/**
- * Custom cursor shown while pointing at a device screen: a rotating dashed
- * ring around a glass disc, with a mono caption. Replaces the arrow so the
- * screen reads as a live surface rather than a picture.
- */
-function ScreenCursor({ x, y, small }) {
-  const ring = small ? 34 : 52;
-  const disc = small ? 24 : 38;
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute z-30"
-      style={{ left: x, top: y, transform: "translate(-50%, -50%)" }}
-    >
-      <div className="relative grid place-items-center">
-        <span
-          className="absolute rounded-full border border-dashed animate-spin-cursor"
-          style={{ width: ring, height: ring, borderColor: "rgba(168,85,247,0.85)" }}
-        />
-        <span
-          className="grid place-items-center rounded-full border text-white backdrop-blur-md"
-          style={{
-            width: disc,
-            height: disc,
-            borderColor: "rgba(255,255,255,0.28)",
-            background: "rgba(168,85,247,0.35)",
-          }}
-        >
-          <Pause size={small ? 10 : 14} strokeWidth={0} fill="currentColor" />
-        </span>
-      </div>
-      {!small && (
-        <span
-          className="mt-2 block whitespace-nowrap text-center text-[0.58rem] uppercase tracking-[0.2em] text-white/85"
-          style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}
-        >
-          paused
-        </span>
-      )}
-    </div>
-  );
-}
 
 /**
  * Screen source, in order:
@@ -101,30 +57,23 @@ function Screen({ project, phone, paused }) {
   );
 }
 
-/** Screen area that tracks the pointer, swaps the cursor and freezes playback. */
+/**
+ * Screen area that freezes playback while pointed at. `data-cursor="pause"`
+ * tells the site cursor to switch to its pause state over this region.
+ */
 function ScreenFrame({ project, phone = false, className, style, children }) {
-  const ref = useRef(null);
   const [hover, setHover] = useState(false);
-  const [xy, setXY] = useState({ x: 0, y: 0 });
-
-  const onMove = (e) => {
-    const r = ref.current?.getBoundingClientRect();
-    if (!r) return;
-    setXY({ x: e.clientX - r.left, y: e.clientY - r.top });
-  };
 
   return (
     <div
-      ref={ref}
+      data-cursor="pause"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onMouseMove={onMove}
-      className={`relative cursor-none overflow-hidden ${className}`}
+      className={`relative overflow-hidden ${className}`}
       style={style}
     >
       <Screen project={project} phone={phone} paused={hover} />
       {children}
-      {hover && <ScreenCursor x={xy.x} y={xy.y} small={phone} />}
     </div>
   );
 }
