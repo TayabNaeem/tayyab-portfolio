@@ -147,6 +147,11 @@
   to { opacity: 1; transform: none; }
 }
 
+/* Ring around the custom screen cursor */
+.animate-spin-cursor {
+  animation: spin 5s linear infinite;
+}
+
 /* Slow vertical pan of a tall screenshot, imitating a page scroll */
 .animate-site-scroll {
   animation: site-scroll 18s ease-in-out infinite alternate;
