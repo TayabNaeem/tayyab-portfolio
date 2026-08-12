@@ -14,7 +14,7 @@ const STATS = [
 
 export default function About() {
   return (
-    <section id="about" className="shell py-24">
+    <section id="about" className="shell section-y">
       <Reveal>
         <div className="grid md:grid-cols-[340px_1fr] gap-12 items-center rounded-[28px] border p-7 sm:p-10 md:p-[50px] bg-gradient-to-br from-surface-2 to-surface"
              style={{ borderColor: "var(--border)" }}>

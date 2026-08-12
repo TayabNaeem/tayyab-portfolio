@@ -68,7 +68,7 @@ export default function FAQ() {
   const [openIdx, setOpenIdx] = useState(0);
 
   return (
-    <section id="faq" className="shell py-24">
+    <section id="faq" className="shell section-y">
       <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <Reveal>
           <div className="lg:sticky lg:top-32">

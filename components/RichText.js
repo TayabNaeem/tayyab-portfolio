@@ -7,7 +7,7 @@ import Reveal from "./Reveal";
 /** Short, centred statement between the hero and the work. */
 export default function RichText() {
   return (
-    <section className="shell py-28 text-center md:py-36">
+    <section className="shell section-y text-center">
       <Reveal>
         <span className="eyebrow">THE POINT</span>
       </Reveal>

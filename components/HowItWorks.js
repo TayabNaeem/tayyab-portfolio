@@ -29,7 +29,7 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="shell py-24">
+    <section id="how-it-works" className="shell section-y">
       <Reveal className="mx-auto mb-14 max-w-[620px] text-center">
         <span className="eyebrow">HOW IT WORKS</span>
         <h2 className="h2">

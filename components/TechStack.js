@@ -25,7 +25,7 @@ const GROUPS = [
 
 export default function TechStack({ hideHeading = false }) {
   return (
-    <section id="stack" className={`shell ${hideHeading ? "pb-24" : "py-24"}`}>
+    <section id="stack" className={`shell ${hideHeading ? "pb-[4.5rem] md:pb-[5.5rem]" : "section-y"}`}>
       {!hideHeading && (
         <Reveal className="mb-12">
           <span className="eyebrow">TECH STACK</span>

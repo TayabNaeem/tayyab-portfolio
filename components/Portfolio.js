@@ -126,7 +126,7 @@ function ProjectList({ items }) {
 export default function Portfolio({ hideHeading = false, limit, grouped = false }) {
   if (grouped) {
     return (
-      <section id="portfolio" className={`shell ${hideHeading ? "pb-24" : "py-24"}`}>
+      <section id="portfolio" className={`shell ${hideHeading ? "pb-[4.5rem] md:pb-[5.5rem]" : "section-y"}`}>
         {populatedCategories().map((c, ci) => {
           const items = byCategory(c.key);
           return (
@@ -152,7 +152,7 @@ export default function Portfolio({ hideHeading = false, limit, grouped = false 
   const more = PROJECTS.length - items.length;
 
   return (
-    <section id="portfolio" className={`shell ${hideHeading ? "pb-24" : "py-24"}`}>
+    <section id="portfolio" className={`shell ${hideHeading ? "pb-[4.5rem] md:pb-[5.5rem]" : "section-y"}`}>
       {!hideHeading && (
         <Reveal className="mb-12 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>

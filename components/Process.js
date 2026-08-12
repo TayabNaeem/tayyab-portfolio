@@ -33,7 +33,7 @@ const STEPS = [
 
 export default function Process({ hideHeading = false }) {
   return (
-    <section id="process" className={`shell ${hideHeading ? "pb-24" : "py-24"}`}>
+    <section id="process" className={`shell ${hideHeading ? "pb-[4.5rem] md:pb-[5.5rem]" : "section-y"}`}>
       {!hideHeading && (
         <Reveal className="mb-14 text-center max-w-[620px] mx-auto">
           <span className="eyebrow">HOW I WORK</span>

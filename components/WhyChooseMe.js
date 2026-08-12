@@ -102,7 +102,7 @@ function Card({ p, i }) {
 
 export default function WhyChooseMe() {
   return (
-    <section id="why-me" className="shell py-24">
+    <section id="why-me" className="shell section-y">
       <Reveal className="mx-auto mb-14 max-w-[620px] text-center">
         <span className="eyebrow">WHY WORK WITH ME</span>
         <h2 className="h2">

@@ -50,7 +50,7 @@ export default function Testimonials({ hideHeading = false }) {
   const current = REVIEWS[active];
 
   return (
-    <section id="testimonials" className={`shell ${hideHeading ? "pb-24" : "py-24"}`}>
+    <section id="testimonials" className={`shell ${hideHeading ? "pb-[4.5rem] md:pb-[5.5rem]" : "section-y"}`}>
       {!hideHeading && (
         <Reveal className="mb-12 max-w-[620px]">
           <span className="eyebrow">TESTIMONIALS</span>

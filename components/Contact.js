@@ -233,7 +233,7 @@ export default function Contact({ hideHeading = false }) {
   };
 
   return (
-    <section id="contact" className="shell py-24">
+    <section id="contact" className="shell section-y">
       <Reveal>
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
           {/* LEFT — details */}
