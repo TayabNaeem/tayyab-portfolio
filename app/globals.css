@@ -118,6 +118,34 @@
   }
 }
 
+/* Replayed whenever a keyed node remounts, e.g. the work showcase slides */
+.slide-in {
+  animation: slide-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+.slide-in-soft {
+  animation: slide-in-soft 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes slide-in-soft {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Slow vertical pan of a tall screenshot, imitating a page scroll */
+.animate-site-scroll {
+  animation: site-scroll 18s ease-in-out infinite alternate;
+}
+.animate-site-scroll-slow {
+  animation: site-scroll 24s ease-in-out infinite alternate;
+}
+@keyframes site-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-100% + 100px)); }
+}
+
 /* Infinite logo marquee — track is duplicated, so -50% loops seamlessly */
 .animate-marquee {
   animation: marquee 34s linear infinite;

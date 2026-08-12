@@ -1,6 +1,6 @@
 import Hero from "@/components/Hero";
 import RichText from "@/components/RichText";
-import Portfolio from "@/components/Portfolio";
+import WorkShowcase from "@/components/WorkShowcase";
 import TopProducts from "@/components/TopProducts";
 import HowItWorks from "@/components/HowItWorks";
 import WhyChooseMe from "@/components/WhyChooseMe";
@@ -16,7 +16,7 @@ export default function Home() {
       {/* Hero already renders the logo marquee full-bleed beneath it */}
       <Hero />
       <RichText />
-      <Portfolio limit={6} />
+      <WorkShowcase limit={6} />
       <TopProducts />
       <HowItWorks />
       <WhyChooseMe />
