@@ -1,86 +1,163 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowRight, Mail, Sparkles } from "lucide-react";
+import { ArrowUpRight, Mail, Phone } from "lucide-react";
 import Reveal from "./Reveal";
-import { CONTACT_EMAIL } from "./Contact";
+import { WhatsappIcon } from "./SocialIcons";
+import {
+  CONTACT_EMAIL,
+  CONTACT_PHONE_DISPLAY,
+  CONTACT_PHONE_E164,
+} from "./Contact";
+
+/** The three ways in, laid out like the work list so the site ends how it reads. */
+const WAYS = [
+  {
+    no: "01",
+    Icon: ArrowUpRight,
+    label: "Start a project",
+    value: "Brief me in three short steps",
+    href: "/contact",
+    internal: true,
+  },
+  {
+    no: "02",
+    Icon: Mail,
+    label: "Email",
+    value: CONTACT_EMAIL,
+    href: `mailto:${CONTACT_EMAIL}`,
+  },
+  {
+    no: "03",
+    Icon: WhatsappIcon,
+    label: "WhatsApp",
+    value: CONTACT_PHONE_DISPLAY,
+    href: `https://wa.me/${CONTACT_PHONE_E164.replace("+", "")}`,
+  },
+];
+
+function Row({ way }) {
+  const inner = (
+    <>
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{ background: "linear-gradient(90deg, rgba(168,85,247,0.14), transparent 70%)" }}
+      />
+
+      <div className="relative flex items-center gap-5 py-6 sm:gap-7 sm:py-7">
+        <span className="font-display text-[0.78rem] font-bold tracking-[0.2em] text-brand">
+          {way.no}
+        </span>
+
+        {/* width/height rather than `size`, so the lucide icons and the inline
+            WhatsApp mark both land at the same box */}
+        <way.Icon
+          width={20}
+          height={20}
+          className="hidden shrink-0 text-dim transition-colors duration-300 group-hover:text-brand sm:block"
+        />
+
+        <div className="min-w-0 flex-1">
+          <span className="font-display text-[clamp(1.15rem,2.4vw,1.6rem)] font-semibold leading-tight tracking-[-0.02em] transition-transform duration-300 group-hover:translate-x-1.5 inline-block">
+            {way.label}
+          </span>
+          <span className="small block truncate">{way.value}</span>
+        </div>
+
+        <span
+          aria-hidden
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-full border text-brand transition-all duration-300 group-hover:bg-grad group-hover:text-bg"
+          style={{ borderColor: "var(--border-2)" }}
+        >
+          <ArrowUpRight size={18} strokeWidth={2.2} />
+        </span>
+      </div>
+    </>
+  );
+
+  const className = "group relative block border-b";
+  const style = { borderColor: "var(--border)" };
+
+  if (way.internal) {
+    return (
+      <Link href={way.href} className={className} style={style}>
+        {inner}
+      </Link>
+    );
+  }
+
+  return (
+    <a
+      href={way.href}
+      target={way.href.startsWith("http") ? "_blank" : undefined}
+      rel="noopener noreferrer"
+      className={className}
+      style={style}
+    >
+      {inner}
+    </a>
+  );
+}
 
 export default function CTA() {
   return (
-    <section className="shell py-16">
-      <Reveal>
-        <div
-          className="relative overflow-hidden rounded-[28px] border p-8 sm:p-12 lg:p-14"
-          style={{
-            borderColor: "var(--border-2)",
-            background: "linear-gradient(150deg,#17131f 0%,#131317 55%,#111014 100%)",
-          }}
-        >
-          {/* ambient glow */}
+    <section className="relative overflow-hidden">
+      {/* one glow, sat behind the statement */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 h-[520px] w-[820px] max-w-[130vw] -translate-x-1/2 -translate-y-1/3 rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(168,85,247,0.16), transparent 68%)",
+          filter: "blur(50px)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-px"
+        style={{
+          background: "linear-gradient(90deg, transparent, rgba(168,85,247,0.5), transparent)",
+        }}
+      />
+
+      <div className="shell section-y relative">
+        <Reveal className="mx-auto max-w-[900px] text-center">
+          <span className="eyebrow">NEXT STEP</span>
+          <h2 className="font-display text-[clamp(2.5rem,6.4vw,4.6rem)] font-bold leading-[1.03] tracking-[-0.035em]">
+            Tell me what you&apos;re building.
+            <br className="hidden sm:block" />{" "}
+            <span className="grad-text">I&apos;ll tell you how to ship it.</span>
+          </h2>
+          <p className="lead mx-auto mt-6 max-w-[560px]">
+            A store, a chatbot, an automation that gives your week back. Pick whichever way
+            below suits you.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.1}>
           <div
-            aria-hidden
-            className="pointer-events-none absolute -right-24 -top-32 h-[420px] w-[420px] rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(168,85,247,0.28), transparent 68%)", filter: "blur(40px)" }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -bottom-40 -left-20 h-[360px] w-[360px] rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(124,58,237,0.18), transparent 70%)", filter: "blur(50px)" }}
-          />
-          {/* top edge highlight */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-px"
-            style={{ background: "linear-gradient(90deg, transparent, rgba(168,85,247,0.7), transparent)" }}
-          />
-          {/* slow orbit ring */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-16 top-1/2 hidden h-[300px] w-[300px] -translate-y-1/2 rounded-full border border-dashed animate-spin-slower lg:block"
-            style={{ borderColor: "rgba(168,85,247,0.16)" }}
-          />
-
-          <div className="relative flex flex-col items-start gap-9 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-[560px]">
-              <span
-                className="mb-5 inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-brand"
-                style={{ borderColor: "var(--border-2)", background: "rgba(168,85,247,0.08)" }}
-              >
-                <Sparkles size={13} strokeWidth={2.2} />
-                Available for new projects
-              </span>
-
-              <h3 className="h2">
-                Have a project in mind?{" "}
-                <span className="grad-text">Let&apos;s build it.</span>
-              </h3>
-
-              <p className="mt-4 max-w-[460px] text-[0.98rem] text-dim">
-                Whether it&apos;s a Shopify store, an AI chatbot or an automation that saves your
-                team hours every week — tell me what you need and I&apos;ll map out a plan.
-              </p>
-            </div>
-
-            <div className="flex shrink-0 flex-col items-start gap-3.5 sm:flex-row sm:items-center lg:flex-col lg:items-stretch">
-              <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
-                <Link href="/contact" className="btn btn-primary w-full justify-center px-7 py-3.5">
-                  Start a project <ArrowRight size={16} strokeWidth={2.2} />
-                </Link>
-              </motion.div>
-
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="inline-flex items-center justify-center gap-2 rounded-full border px-6 py-3.5 text-[0.92rem] font-medium text-dim transition-all hover:-translate-y-0.5 hover:border-brand hover:text-white"
-                style={{ borderColor: "var(--border-2)" }}
-              >
-                <Mail size={16} strokeWidth={1.9} />
-                Email me
-              </a>
-            </div>
+            className="mx-auto mt-14 max-w-[860px] border-t"
+            style={{ borderColor: "var(--border)" }}
+          >
+            {WAYS.map((w) => (
+              <Row key={w.no} way={w} />
+            ))}
           </div>
-        </div>
-      </Reveal>
+        </Reveal>
+
+        <Reveal delay={0.18}>
+          <div className="mt-10 flex justify-center">
+            <span className="inline-flex items-center gap-3 text-[0.88rem]">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-70" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand" />
+              </span>
+              <span className="font-semibold text-white">Open for work</span>
+              <span className="text-dim">Replies usually the same day</span>
+            </span>
+          </div>
+        </Reveal>
+      </div>
     </section>
   );
 }

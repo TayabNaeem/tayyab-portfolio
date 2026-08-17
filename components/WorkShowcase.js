@@ -72,14 +72,11 @@ function Details({ p, index, total }) {
 
 /* ---------- progress dots ---------- */
 
-function Dots({ items, pos, onPick }) {
+function Dots({ items, active, onPick }) {
   return (
     <div className="flex shrink-0 flex-row justify-center gap-2.5 lg:flex-col lg:justify-start">
       {items.map((p, i) => {
-        // nearness drives the size, so the rail moves with the scroll rather
-        // than snapping between states
-        const near = Math.max(0, 1 - Math.abs(pos - i));
-        const on = Math.round(pos) === i;
+        const on = i === active;
         return (
           <button
             key={p.id}
@@ -92,22 +89,20 @@ function Dots({ items, pos, onPick }) {
           >
             {/* horizontal rail on small screens */}
             <span
-              className="rounded-full lg:hidden"
+              className="rounded-full transition-all duration-300 lg:hidden"
               style={{
-                width: `${6 + near * 22}px`,
+                width: on ? "28px" : "6px",
                 height: "6px",
-                background:
-                  near > 0.05 ? "linear-gradient(115deg,#a855f7,#6d28d9)" : "rgba(255,255,255,0.25)",
+                background: on ? "linear-gradient(115deg,#a855f7,#6d28d9)" : "rgba(255,255,255,0.25)",
               }}
             />
             {/* vertical rail from lg up */}
             <span
-              className="hidden rounded-full lg:block"
+              className="hidden rounded-full transition-all duration-300 lg:block"
               style={{
                 width: "6px",
-                height: `${6 + near * 22}px`,
-                background:
-                  near > 0.05 ? "linear-gradient(115deg,#a855f7,#6d28d9)" : "rgba(255,255,255,0.25)",
+                height: on ? "28px" : "6px",
+                background: on ? "linear-gradient(115deg,#a855f7,#6d28d9)" : "rgba(255,255,255,0.25)",
               }}
             />
           </button>
@@ -125,8 +120,9 @@ export default function WorkShowcase({ limit = 8 }) {
   const last = items.length - 1;
 
   const trackRef = useRef(null);
-  // Fractional position through the list, so slides cross-fade rather than snap
-  const [pos, setPos] = useState(0);
+  // One project at a time. Scrolling steps the index, and the new slide plays
+  // its entrance animation because the key changes.
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
     const el = trackRef.current;
@@ -136,7 +132,7 @@ export default function WorkShowcase({ limit = 8 }) {
       const span = el.offsetHeight - window.innerHeight;
       if (span <= 0) return;
       const progress = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / span));
-      setPos(progress * last);
+      setActive(Math.min(last, Math.floor(progress * items.length)));
     };
 
     update();
@@ -146,17 +142,21 @@ export default function WorkShowcase({ limit = 8 }) {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
-  }, [last]);
+  }, [last, items.length]);
 
   const jumpTo = (i) => {
-    setPos(i);
+    setActive(i);
     const el = trackRef.current;
     if (!el) return;
     const span = el.offsetHeight - window.innerHeight;
-    window.scrollTo({ top: el.offsetTop + span * (i / last), behavior: "smooth" });
+    // land in the middle of that project's segment
+    window.scrollTo({
+      top: el.offsetTop + span * ((i + 0.5) / items.length),
+      behavior: "smooth",
+    });
   };
 
-  const activeIndex = Math.round(pos);
+  const current = items[active];
 
   return (
     <section id="portfolio">
@@ -179,45 +179,21 @@ export default function WorkShowcase({ limit = 8 }) {
           <div className="shell w-full">
             <div className="flex flex-col gap-7 lg:flex-row lg:items-center lg:gap-8 xl:gap-10">
               <div className="order-2 lg:order-1">
-                <Dots items={items} pos={pos} onPick={jumpTo} />
+                <Dots items={items} active={active} onPick={jumpTo} />
               </div>
 
-              {/* every slide occupies the same cell and cross-fades by distance */}
-              <div className="order-1 grid min-w-0 flex-1 lg:order-2">
-                {items.map((p, i) => {
-                  const t = pos - i;
-                  const away = Math.abs(t);
-                  if (away > 1) return null;
+              {/* only the current project is mounted; the keys replay its entrance */}
+              <div className="order-1 grid min-w-0 flex-1 items-center gap-7 lg:order-2 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+                <div key={`copy-${current.id}`} className="slide-in min-w-0">
+                  <Details p={current} index={active} total={items.length} />
+                </div>
 
-                  // Hold each slide still and solid for most of its segment,
-                  // then cross-fade quickly. A long overlap made two slides
-                  // readable at once at different offsets, which looked like
-                  // the section was juddering.
-                  const HOLD = 0.7;
-                  const fade = away <= HOLD ? 0 : (away - HOLD) / (1 - HOLD);
-                  const dir = t === 0 ? 0 : Math.sign(t);
-
-                  return (
-                    <div
-                      key={p.id}
-                      aria-hidden={i !== activeIndex}
-                      style={{
-                        gridArea: "1 / 1",
-                        opacity: 1 - fade,
-                        transform: `translateY(${-dir * fade * 16}px) scale(${1 - fade * 0.02})`,
-                        pointerEvents: fade === 0 ? "auto" : "none",
-                        willChange: "opacity, transform",
-                      }}
-                      className="grid min-w-0 items-center gap-7 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14"
-                    >
-                      <Details p={p} index={i} total={items.length} />
-
-                      <div className="order-first min-w-0 pr-[3%] lg:order-none">
-                        <DeviceMockup project={p} />
-                      </div>
-                    </div>
-                  );
-                })}
+                <div
+                  key={`device-${current.id}`}
+                  className="slide-in-soft order-first min-w-0 pr-[3%] lg:order-none"
+                >
+                  <DeviceMockup project={current} />
+                </div>
               </div>
             </div>
           </div>

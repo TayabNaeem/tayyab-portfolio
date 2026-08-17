@@ -147,6 +147,12 @@
   to { opacity: 1; transform: none; }
 }
 
+/* Testimonial rail: fills across while a quote is on screen */
+@keyframes rail {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
 /* ---------- site wide custom cursor ---------- */
 .has-custom-cursor,
 .has-custom-cursor * {
