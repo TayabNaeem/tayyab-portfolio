@@ -147,12 +147,6 @@
   to { opacity: 1; transform: none; }
 }
 
-/* Testimonial rail: fills across while a quote is on screen */
-@keyframes rail {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
 /* CTA thread: typing dots, and the caret in the composer */
 @keyframes typing {
   0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }

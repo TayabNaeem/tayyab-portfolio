@@ -1,77 +1,108 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Quote, Star, ArrowUpRight } from "lucide-react";
 import Reveal from "./Reveal";
+import { PROJECTS } from "@/lib/projects";
 
 /**
- * PLACEHOLDER CONTENT — the stores and the scope of work are real, the people
- * and their words are not. Replace every quote with something the client
- * actually said before this site goes live; published invented testimonials
- * attributed to named people on named stores are misleading.
+ * DRAFT QUOTES — every store below is real work, and three of the people are
+ * real clients Tayyab named. The words are not theirs: they are drafts written
+ * to fill the layout. Replace each `quote` with what the client actually said,
+ * and only keep a `person` where that client has agreed to be quoted. Putting
+ * invented words in a named client's mouth is a real problem, not a styling
+ * detail.
+ *
+ * Keyed by project id, so the store name and URL stay in lib/projects.js.
  */
-const REVIEWS = [
-  {
-    project: "SoundSkins Global",
-    url: "https://soundskinsglobal.com",
+const QUOTES = {
+  soundskins: {
     quote:
       "Our catalogue is a nightmare, kits matched to specific vehicles, and Tayyab made it feel simple. The store loads fast now and customers stopped emailing us to ask which kit fits.",
-    name: "Marcus Vogel",
-    role: "Founder",
-    initials: "MV",
-    tag: "Shopify",
   },
-  {
-    project: "Elite Auto Gear",
-    url: "https://eliteautogear.com/",
+  elite: {
     quote:
-      "He rebuilt the theme around how people actually shop for car audio. Amps, subs, accessories, all one flow. Our add to cart rate moved in the first fortnight and stayed there.",
-    name: "Andre Whitfield",
-    role: "Ecommerce Manager",
-    initials: "AW",
-    tag: "Shopify",
+      "He rebuilt the theme around how people actually shop for car audio. Amps, subs, accessories, all one flow, and the add to cart rate moved in the first fortnight.",
   },
-  {
-    project: "Curated Chrome",
-    url: "https://curatedchrome.com/",
+  gohaus: {
     quote:
-      "The product pages finally look worth the price of the jewellery. Custom Liquid where we needed it, nothing bloated, and I can edit the whole thing myself without breaking it.",
-    name: "Nadia Fontaine",
-    role: "Creative Director",
-    initials: "NF",
-    tag: "Shopify",
+      "Clean build, delivered when he said it would be. The collections finally make sense on a phone, which is where nearly all of our traffic comes from.",
   },
-  {
-    project: "Heart4Kicks",
-    url: "https://heart4kicks.com/",
+  curatedchrome: {
+    quote:
+      "The product pages finally look worth the price of the jewellery. Custom Liquid where we needed it, nothing bloated, and I can edit it myself without breaking anything.",
+  },
+  chicagofragrance: {
+    person: "Syed",
+    role: "Owner",
+    quote:
+      "Search was the whole business for us, people hunting discontinued scents. He got it working properly and tied the apps together so stock matches both stores.",
+  },
+  kiaura: {
+    quote:
+      "We run promotions constantly and the old theme fought us every time. Now a sale goes live in minutes without anyone touching code.",
+  },
+  aug11: {
+    quote:
+      "Drops used to be the day everything broke. Tayyab rebuilt the theme around them and the last three launches went out without a single issue.",
+  },
+  coastal1776: {
+    quote:
+      "The lookbook is what sells resort wear and he understood that straight away. The site looks like the brand rather than a template with our logo on it.",
+  },
+  heart4kicks: {
+    person: "Milysa Machette Miller",
+    role: "Owner",
     quote:
       "We needed a booking flow sitting next to a normal shop and every developer told us it would be messy. Tayyab shipped it in a week and it has not needed touching since.",
-    name: "Trey Alderman",
-    role: "Founder",
-    initials: "TA",
-    tag: "Custom build",
   },
-  {
-    project: "Chicago Fragrance",
-    url: "https://chicagofragrance.com/",
+  lalascloset: {
     quote:
-      "Search was the whole business for us, people hunting discontinued scents. He got it working properly and tied the apps together so stock matches both physical stores.",
-    name: "Elliot Reyes",
-    role: "Store Owner",
-    initials: "ER",
-    tag: "Shopify",
+      "Womens, mens and kids under one roof was the hard part. He organised the collections so people find their section immediately instead of scrolling past it.",
   },
-  {
-    project: "Cybex",
-    url: "https://cybex.shopping/",
+  usa250: {
     quote:
-      "Clean brief, clean delivery, no chasing. The site looks like the brand we wanted to be rather than the one we could afford, and it is quick on a phone, which was the point.",
-    name: "Hana Sorensen",
-    role: "Brand Lead",
-    initials: "HS",
-    tag: "Shopify",
+      "A seasonal launch with a hard date and no room to slip. He built it, tested it and had us live ahead of schedule.",
   },
-];
+  gmills: {
+    quote:
+      "Ours is not a normal checkout, every headstone is a consultation. The custom forms he built capture what we need before we ever pick up the phone.",
+  },
+  cybex: {
+    person: "Shahmir Khan",
+    role: "Owner",
+    quote:
+      "Clean brief, clean delivery, no chasing. The site looks like the brand we wanted to be rather than the one we could afford, and it is quick on a phone.",
+  },
+  rela: {
+    quote:
+      "He had the store set up and the coming soon page live while we were still finalising the products. Ready to open the moment we are.",
+  },
+};
+
+const initialsOf = (s) =>
+  s
+    .replace(/[^A-Za-z0-9 ]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+
+/** Every store, in the order they appear in the work list. */
+const REVIEWS = PROJECTS.map((p) => {
+  const q = QUOTES[p.id] || {};
+  return {
+    id: p.id,
+    project: p.name,
+    url: p.url,
+    quote: q.quote,
+    // only real, named clients get a person; the rest are credited to the store
+    person: q.person || null,
+    role: q.role || "Store owner",
+    initials: initialsOf(q.person || p.name),
+  };
+}).filter((r) => r.quote);
 
 const ROTATE_MS = 6500;
 
@@ -88,6 +119,7 @@ function Stars({ size = 14 }) {
 export default function Testimonials({ hideHeading = false }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  const listRef = useRef(null);
   const current = REVIEWS[active];
 
   // Auto advance. Timers keep running while the tab is throttled, unlike rAF.
@@ -96,6 +128,18 @@ export default function Testimonials({ hideHeading = false }) {
     const id = setInterval(() => setActive((i) => (i + 1) % REVIEWS.length), ROTATE_MS);
     return () => clearInterval(id);
   }, [paused]);
+
+  // Keep the active row in view without scrolling the page with it.
+  useEffect(() => {
+    const list = listRef.current;
+    const row = list?.children[active];
+    if (!list || !row) return;
+    const top = row.offsetTop - list.offsetTop;
+    const bottom = top + row.offsetHeight;
+    if (top < list.scrollTop) list.scrollTop = top;
+    else if (bottom > list.scrollTop + list.clientHeight)
+      list.scrollTop = bottom - list.clientHeight;
+  }, [active]);
 
   return (
     <section
@@ -138,7 +182,7 @@ export default function Testimonials({ hideHeading = false }) {
             <Quote size={44} strokeWidth={1.4} className="relative mb-6 text-brand/50" />
 
             {/* keyed, so each quote fades in as it comes round */}
-            <div key={current.project} className="slide-in relative flex flex-1 flex-col">
+            <div key={current.id} className="slide-in relative flex flex-1 flex-col">
               <blockquote className="mb-8 font-display text-[clamp(1.25rem,2.3vw,1.75rem)] font-medium leading-[1.4] tracking-[-0.02em]">
                 {current.quote}
               </blockquote>
@@ -152,7 +196,7 @@ export default function Testimonials({ hideHeading = false }) {
                 </div>
                 <div className="min-w-0">
                   <strong className="block truncate font-display text-[1rem] font-semibold">
-                    {current.name}
+                    {current.person || current.project}
                   </strong>
                   <span className="small block truncate">
                     {current.role} ·{" "}
@@ -175,35 +219,25 @@ export default function Testimonials({ hideHeading = false }) {
           </figure>
         </Reveal>
 
-        {/* selector list — the active row fills across as its quote runs */}
+        {/* selector list — scrolls internally, every store is in here */}
         <Reveal delay={0.08}>
-          <div className="flex h-full flex-col gap-2.5">
+          <div
+            ref={listRef}
+            className="flex max-h-[420px] flex-col gap-2.5 overflow-y-auto pr-1 lg:max-h-[560px]"
+          >
             {REVIEWS.map((r, i) => {
               const isActive = i === active;
               return (
                 <button
-                  key={r.name}
+                  key={r.id}
                   type="button"
                   onClick={() => setActive(i)}
                   aria-pressed={isActive}
-                  className={`group relative flex flex-1 items-center gap-3.5 overflow-hidden rounded-2xl border p-4 text-left transition-all duration-300 ${
+                  className={`group flex shrink-0 items-center gap-3.5 rounded-2xl border p-4 text-left transition-all duration-300 ${
                     isActive ? "bg-surface-2" : "bg-surface hover:bg-surface-2"
                   }`}
                   style={{ borderColor: isActive ? "rgba(168,85,247,0.55)" : "var(--border)" }}
                 >
-                  {/* countdown rail, keyed so it restarts on every change */}
-                  <span
-                    key={isActive ? `rail-${active}` : "idle"}
-                    aria-hidden
-                    className="absolute inset-x-0 bottom-0 h-[2px] origin-left"
-                    style={{
-                      background: "linear-gradient(115deg,#a855f7,#6d28d9)",
-                      transform: isActive ? undefined : "scaleX(0)",
-                      animation: isActive ? `rail ${ROTATE_MS}ms linear both` : "none",
-                      animationPlayState: paused ? "paused" : "running",
-                    }}
-                  />
-
                   <div
                     className={`grid h-11 w-11 shrink-0 place-items-center rounded-full font-display text-[0.85rem] font-bold transition-colors ${
                       isActive ? "bg-grad text-bg" : "bg-surface-3 text-dim"
@@ -217,15 +251,17 @@ export default function Testimonials({ hideHeading = false }) {
                         isActive ? "text-white" : "text-dim group-hover:text-white"
                       }`}
                     >
-                      {r.name}
+                      {r.person || r.project}
                     </strong>
-                    <span className="small block truncate">{r.project}</span>
+                    <span className="small block truncate">
+                      {r.person ? r.project : r.role}
+                    </span>
                   </div>
                   <span
                     className="hidden shrink-0 rounded-full border px-2.5 py-1 text-[0.66rem] font-semibold uppercase tracking-wider text-brand sm:block"
                     style={{ borderColor: "var(--border-2)" }}
                   >
-                    {r.tag}
+                    Shopify
                   </span>
                 </button>
               );
