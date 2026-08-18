@@ -5,10 +5,10 @@ import { Quote, Star, ArrowUpRight } from "lucide-react";
 import Reveal from "./Reveal";
 
 /**
- * PLACEHOLDER CONTENT — the project names and scope are real, the people and
- * their words are not. Replace every quote with something the client actually
- * said before this site goes live; published invented testimonials attributed
- * to named people on named stores are misleading.
+ * PLACEHOLDER CONTENT — the stores and the scope of work are real, the people
+ * and their words are not. Replace every quote with something the client
+ * actually said before this site goes live; published invented testimonials
+ * attributed to named people on named stores are misleading.
  */
 const REVIEWS = [
   {
@@ -75,7 +75,7 @@ const REVIEWS = [
 
 const ROTATE_MS = 6500;
 
-function Stars({ size = 15 }) {
+function Stars({ size = 14 }) {
   return (
     <div className="flex gap-1">
       {[...Array(5)].map((_, i) => (
@@ -88,17 +88,14 @@ function Stars({ size = 15 }) {
 export default function Testimonials({ hideHeading = false }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  const current = REVIEWS[active];
 
   // Auto advance. Timers keep running while the tab is throttled, unlike rAF.
   useEffect(() => {
     if (paused) return;
-    const id = setInterval(() => {
-      setActive((i) => (i + 1) % REVIEWS.length);
-    }, ROTATE_MS);
+    const id = setInterval(() => setActive((i) => (i + 1) % REVIEWS.length), ROTATE_MS);
     return () => clearInterval(id);
   }, [paused]);
-
-  const current = REVIEWS[active];
 
   return (
     <section
@@ -106,115 +103,135 @@ export default function Testimonials({ hideHeading = false }) {
       className={`shell ${hideHeading ? "pb-[4.5rem] md:pb-[5.5rem]" : "section-y"}`}
     >
       {!hideHeading && (
-        <Reveal className="mx-auto mb-14 max-w-[620px] text-center">
+        <Reveal className="mb-12 max-w-[620px]">
           <span className="eyebrow">TESTIMONIALS</span>
           <h2 className="h2">
-            The people behind <span className="grad-text">the stores.</span>
+            What clients <span className="grad-text">say.</span>
           </h2>
-          <p className="lead mt-4">
-            Every quote below comes from a storefront that is live right now. Click the name to
-            go and look at it.
-          </p>
         </Reveal>
       )}
 
+      {/* pointing anywhere in here holds the current quote */}
       <div
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
-        className="mx-auto max-w-[1000px]"
+        className="grid gap-5 lg:grid-cols-[1.5fr_1fr] lg:gap-8"
       >
-        {/* quote */}
-        <div className="relative min-h-[340px] sm:min-h-[300px]">
-          <Quote
-            aria-hidden
-            size={120}
-            strokeWidth={1}
-            className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 text-brand/[0.07]"
-          />
+        {/* featured quote */}
+        <Reveal>
+          <figure
+            className="relative flex h-full flex-col overflow-hidden rounded-[26px] border p-8 sm:p-11"
+            style={{
+              borderColor: "var(--border-2)",
+              background: "linear-gradient(160deg, rgba(168,85,247,0.10), #151517 60%)",
+            }}
+          >
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 rounded-full"
+              style={{
+                background: "radial-gradient(circle, rgba(168,85,247,0.25), transparent 70%)",
+                filter: "blur(34px)",
+              }}
+            />
 
-          <div key={current.project} className="slide-in relative text-center">
-            <div className="mb-7 flex justify-center">
-              <Stars size={17} />
-            </div>
+            <Quote size={44} strokeWidth={1.4} className="relative mb-6 text-brand/50" />
 
-            <blockquote className="mx-auto max-w-[880px] font-display text-[clamp(1.3rem,2.7vw,2.05rem)] font-medium leading-[1.38] tracking-[-0.025em] text-white">
-              {current.quote}
-            </blockquote>
+            {/* keyed, so each quote fades in as it comes round */}
+            <div key={current.project} className="slide-in relative flex flex-1 flex-col">
+              <blockquote className="mb-8 font-display text-[clamp(1.25rem,2.3vw,1.75rem)] font-medium leading-[1.4] tracking-[-0.02em]">
+                {current.quote}
+              </blockquote>
 
-            <div className="mt-9 flex flex-col items-center gap-3">
-              <span
-                className="grid h-14 w-14 place-items-center rounded-full bg-grad font-display text-[1rem] font-bold text-bg"
-                aria-hidden
+              <figcaption
+                className="mt-auto flex items-center gap-4 border-t pt-6"
+                style={{ borderColor: "var(--border)" }}
               >
-                {current.initials}
-              </span>
-              <div>
-                <strong className="block font-display text-[1.05rem] font-semibold">
-                  {current.name}
-                </strong>
-                <span className="small">
-                  {current.role} ·{" "}
-                  <a
-                    href={current.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-0.5 text-brand transition-colors hover:text-brand-light"
-                  >
-                    {current.project}
-                    <ArrowUpRight size={13} strokeWidth={2.2} />
-                  </a>
-                </span>
-              </div>
+                <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-grad font-display text-[1rem] font-bold text-bg">
+                  {current.initials}
+                </div>
+                <div className="min-w-0">
+                  <strong className="block truncate font-display text-[1rem] font-semibold">
+                    {current.name}
+                  </strong>
+                  <span className="small block truncate">
+                    {current.role} ·{" "}
+                    <a
+                      href={current.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-0.5 text-brand transition-colors hover:text-brand-light"
+                    >
+                      {current.project}
+                      <ArrowUpRight size={12} strokeWidth={2.2} />
+                    </a>
+                  </span>
+                </div>
+                <div className="ml-auto hidden sm:block">
+                  <Stars size={16} />
+                </div>
+              </figcaption>
             </div>
-          </div>
-        </div>
+          </figure>
+        </Reveal>
 
-        {/* project rail — doubles as the progress indicator */}
-        <div
-          className="mt-12 grid gap-x-2 gap-y-3 border-t pt-5 sm:grid-cols-3 lg:grid-cols-6"
-          style={{ borderColor: "var(--border)" }}
-        >
-          {REVIEWS.map((r, i) => {
-            const on = i === active;
-            return (
-              <button
-                key={r.project}
-                type="button"
-                onClick={() => setActive(i)}
-                aria-current={on}
-                className="group relative pt-4 text-left"
-              >
-                {/* rail */}
-                <span
-                  aria-hidden
-                  className="absolute left-0 right-0 top-0 h-[2px] overflow-hidden rounded-full"
-                  style={{ background: "rgba(255,255,255,0.09)" }}
+        {/* selector list — the active row fills across as its quote runs */}
+        <Reveal delay={0.08}>
+          <div className="flex h-full flex-col gap-2.5">
+            {REVIEWS.map((r, i) => {
+              const isActive = i === active;
+              return (
+                <button
+                  key={r.name}
+                  type="button"
+                  onClick={() => setActive(i)}
+                  aria-pressed={isActive}
+                  className={`group relative flex flex-1 items-center gap-3.5 overflow-hidden rounded-2xl border p-4 text-left transition-all duration-300 ${
+                    isActive ? "bg-surface-2" : "bg-surface hover:bg-surface-2"
+                  }`}
+                  style={{ borderColor: isActive ? "rgba(168,85,247,0.55)" : "var(--border)" }}
                 >
+                  {/* countdown rail, keyed so it restarts on every change */}
                   <span
-                    key={on ? `fill-${active}-${paused}` : "idle"}
-                    className="block h-full rounded-full"
+                    key={isActive ? `rail-${active}` : "idle"}
+                    aria-hidden
+                    className="absolute inset-x-0 bottom-0 h-[2px] origin-left"
                     style={{
                       background: "linear-gradient(115deg,#a855f7,#6d28d9)",
-                      width: on ? "100%" : "0%",
-                      transformOrigin: "left",
-                      animation: on ? `rail ${ROTATE_MS}ms linear both` : "none",
+                      transform: isActive ? undefined : "scaleX(0)",
+                      animation: isActive ? `rail ${ROTATE_MS}ms linear both` : "none",
                       animationPlayState: paused ? "paused" : "running",
                     }}
                   />
-                </span>
 
-                <span
-                  className={`block truncate font-display text-[0.9rem] font-semibold transition-colors ${
-                    on ? "text-white" : "text-dim group-hover:text-white"
-                  }`}
-                >
-                  {r.project}
-                </span>
-                <span className="small block truncate">{r.tag}</span>
-              </button>
-            );
-          })}
-        </div>
+                  <div
+                    className={`grid h-11 w-11 shrink-0 place-items-center rounded-full font-display text-[0.85rem] font-bold transition-colors ${
+                      isActive ? "bg-grad text-bg" : "bg-surface-3 text-dim"
+                    }`}
+                  >
+                    {r.initials}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <strong
+                      className={`block truncate font-display text-[0.95rem] font-semibold transition-colors ${
+                        isActive ? "text-white" : "text-dim group-hover:text-white"
+                      }`}
+                    >
+                      {r.name}
+                    </strong>
+                    <span className="small block truncate">{r.project}</span>
+                  </div>
+                  <span
+                    className="hidden shrink-0 rounded-full border px-2.5 py-1 text-[0.66rem] font-semibold uppercase tracking-wider text-brand sm:block"
+                    style={{ borderColor: "var(--border-2)" }}
+                  >
+                    {r.tag}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </Reveal>
       </div>
     </section>
   );
