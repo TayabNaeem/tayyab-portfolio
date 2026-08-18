@@ -131,7 +131,7 @@ const ROTATE_MS = 6500;
 const SHIFT_MS = 620;
 
 /* Window of the list that is on screen. The rest sit below the clip. */
-const VISIBLE = 6;
+const VISIBLE = 5;
 const ROW_H = 76;
 const ROW_GAP = 10;
 const STEP = ROW_H + ROW_GAP;
@@ -209,8 +209,9 @@ export default function Testimonials({ hideHeading = false }) {
         {/* featured quote */}
         <Reveal>
           <figure
-            className="relative flex h-full flex-col overflow-hidden rounded-[26px] border p-8 sm:p-11"
+            className="relative flex h-full flex-col overflow-hidden rounded-[26px] border p-7 sm:p-9"
             style={{
+              minHeight: WINDOW_H,
               borderColor: "var(--border-2)",
               background: "linear-gradient(160deg, rgba(168,85,247,0.10), #151517 60%)",
             }}
@@ -228,7 +229,7 @@ export default function Testimonials({ hideHeading = false }) {
 
             {/* keyed, so each quote fades in as it comes round */}
             <div key={current.id} className="slide-in relative flex flex-1 flex-col">
-              <blockquote className="mb-8 font-display text-[clamp(1.25rem,2.3vw,1.75rem)] font-medium leading-[1.4] tracking-[-0.02em]">
+              <blockquote className="mb-7 font-display text-[clamp(1.18rem,2vw,1.55rem)] font-medium leading-[1.42] tracking-[-0.02em]">
                 {current.quote}
               </blockquote>
 
