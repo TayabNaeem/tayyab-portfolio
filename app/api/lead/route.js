@@ -31,6 +31,20 @@ const FROM = process.env.LEAD_FROM_EMAIL || process.env.SMTP_USER || "";
  */
 let transporter = null;
 
+/**
+ * Google shows app passwords as four spaced groups ("abcd efgh ijkl mnop").
+ * Mail clients strip those spaces; nodemailer sends whatever it is given, and
+ * Gmail then answers 535. Strip them, but only for the shape that is
+ * unambiguously a Google app password, since a space can be legitimate in
+ * someone else's SMTP password.
+ */
+function normalisePass(pass, host) {
+  const trimmed = String(pass).trim();
+  if (!/gmail|google/i.test(host)) return trimmed;
+  const squashed = trimmed.replace(/\s+/g, "");
+  return /^[a-z]{16}$/i.test(squashed) ? squashed : trimmed;
+}
+
 function getTransport() {
   const { SMTP_HOST, SMTP_USER, SMTP_PASS } = process.env;
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
@@ -41,10 +55,10 @@ function getTransport() {
     process.env.SMTP_SECURE != null ? process.env.SMTP_SECURE === "true" : port === 465;
 
   transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
+    host: SMTP_HOST.trim(),
     port,
     secure,
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
+    auth: { user: SMTP_USER.trim(), pass: normalisePass(SMTP_PASS, SMTP_HOST) },
     // a hung mail server must not hold the function open
     connectionTimeout: 10_000,
     greetingTimeout: 10_000,
