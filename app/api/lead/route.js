@@ -1,23 +1,57 @@
 /**
  * Lead + escalation email for the site assistant.
  *
- * Sends through Resend's REST API so there is no extra dependency. It needs
- * two environment variables set on the host (Vercel → Settings → Environment
- * Variables), never committed:
+ * Sends over SMTP. Set these on the host (Vercel → Settings → Environment
+ * Variables) and never commit them:
  *
- *   RESEND_API_KEY   secret, from resend.com
+ *   SMTP_HOST        e.g. smtp.gmail.com
+ *   SMTP_PORT        587 for STARTTLS, 465 for implicit TLS. Defaults to 587.
+ *   SMTP_USER        the mailbox to authenticate as
+ *   SMTP_PASS        its password, or a Gmail app password. SECRET.
+ *   SMTP_SECURE      optional "true"/"false"; inferred from the port otherwise
  *   LEAD_TO_EMAIL    where leads land, defaults to the contact address
- *   LEAD_FROM_EMAIL  a sender on a domain verified in Resend
+ *   LEAD_FROM_EMAIL  the From header, defaults to SMTP_USER
  *
- * With no key configured the route still answers 200 with delivered:false, so
- * a missing key degrades the notification rather than breaking the chat.
+ * With SMTP unconfigured the route still answers 200 with delivered:false, so
+ * missing settings degrade the notification rather than breaking the chat.
  */
+
+import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const TO = process.env.LEAD_TO_EMAIL || "naemtayb@gmail.com";
-const FROM = process.env.LEAD_FROM_EMAIL || "Portfolio <onboarding@resend.dev>";
+const FROM = process.env.LEAD_FROM_EMAIL || process.env.SMTP_USER || "";
+
+/**
+ * One transporter per warm instance. Serverless reuses the process between
+ * invocations, so rebuilding the connection pool on every request would mean
+ * a fresh TLS handshake for each lead.
+ */
+let transporter = null;
+
+function getTransport() {
+  const { SMTP_HOST, SMTP_USER, SMTP_PASS } = process.env;
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
+  if (transporter) return transporter;
+
+  const port = Number(process.env.SMTP_PORT) || 587;
+  const secure =
+    process.env.SMTP_SECURE != null ? process.env.SMTP_SECURE === "true" : port === 465;
+
+  transporter = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port,
+    secure,
+    auth: { user: SMTP_USER, pass: SMTP_PASS },
+    // a hung mail server must not hold the function open
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 15_000,
+  });
+  return transporter;
+}
 
 const KINDS = {
   lead: { label: "New lead", tint: "#a855f7" },
@@ -207,10 +241,10 @@ export async function POST(request) {
     return Response.json({ ok: false, error: "name and email required" }, { status: 422 });
   }
 
-  const key = process.env.RESEND_API_KEY;
-  if (!key) {
+  const mailer = getTransport();
+  if (!mailer) {
     // Nothing to send with. Say so honestly rather than pretending it went.
-    console.warn("[lead] RESEND_API_KEY is not set — email not sent", { kind, email: lead.email });
+    console.warn("[lead] SMTP is not configured — email not sent", { kind, email: lead.email });
     return Response.json({ ok: true, delivered: false, reason: "email not configured" });
   }
 
@@ -225,28 +259,26 @@ export async function POST(request) {
           : `${who} wants to talk to you`;
 
   try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: FROM,
-        to: [TO],
-        reply_to: lead.email,
-        subject,
-        html: buildHtml({ kind, lead, question, transcript, interests }),
-        text: buildText({ kind, lead, question, transcript, interests }),
-      }),
+    const info = await mailer.sendMail({
+      from: FROM || process.env.SMTP_USER,
+      to: TO,
+      replyTo: lead.email,
+      subject,
+      html: buildHtml({ kind, lead, question, transcript, interests }),
+      text: buildText({ kind, lead, question, transcript, interests }),
     });
 
-    if (!res.ok) {
-      const detail = await res.text().catch(() => "");
-      console.error("[lead] resend rejected", res.status, detail.slice(0, 400));
-      return Response.json({ ok: true, delivered: false, reason: "provider error" });
+    // A server that accepted nothing has not delivered anything.
+    if (info?.rejected?.length && !info?.accepted?.length) {
+      console.error("[lead] smtp rejected every recipient", info.rejected);
+      return Response.json({ ok: true, delivered: false, reason: "rejected" });
     }
 
     return Response.json({ ok: true, delivered: true });
   } catch (err) {
-    console.error("[lead] send failed", err);
+    // Bad credentials, blocked port, host down — log it, keep the chat working.
+    console.error("[lead] smtp send failed", err?.message || err);
+    transporter = null; // force a fresh connection next time
     return Response.json({ ok: true, delivered: false, reason: "send failed" });
   }
 }
