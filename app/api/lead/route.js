@@ -23,6 +23,14 @@ const KINDS = {
   lead: { label: "New lead", tint: "#a855f7" },
   pricing: { label: "Pricing request", tint: "#f59e0b" },
   connect: { label: "Wants to talk to you", tint: "#22c55e" },
+  summary: { label: "Chat finished", tint: "#3b82f6" },
+};
+
+const FOOTERS = {
+  lead: "Sent the moment they gave their details, before any conversation. Their questions arrive separately.",
+  pricing: "They were told you would reply within 24 hours.",
+  connect: "They were told you would reply within 24 hours.",
+  summary: "Sent when the conversation ended, or when they went quiet.",
 };
 
 const clean = (v, max = 2000) =>
@@ -59,7 +67,7 @@ function row(label, value, opts = {}) {
     </tr>`;
 }
 
-function buildHtml({ kind, lead, question, transcript }) {
+function buildHtml({ kind, lead, question, transcript, interests }) {
   const k = KINDS[kind] || KINDS.lead;
   const when = new Date().toLocaleString("en-GB", {
     dateStyle: "full",
@@ -68,7 +76,7 @@ function buildHtml({ kind, lead, question, transcript }) {
   });
 
   const chat = (transcript || [])
-    .slice(-14)
+    .slice(-40)
     .map((m) => {
       const mine = m.from === "bot";
       return `
@@ -107,6 +115,7 @@ function buildHtml({ kind, lead, question, transcript }) {
             ${row("Name", lead?.name)}
             ${row("Email", lead?.email, { href: `mailto:${clean(lead?.email, 200)}` })}
             ${row("Phone", lead?.phone, { href: `tel:${clean(lead?.phone, 40).replace(/[^\d+]/g, "")}` })}
+            ${row("Interested in", interests?.length ? interests.join(", ") : "")}
             ${row("Service", lead?.service)}
             ${row("Project details", lead?.details)}
             ${question ? row("Their question", question) : ""}
@@ -135,11 +144,7 @@ function buildHtml({ kind, lead, question, transcript }) {
 
         <tr><td style="background:#fafafa;padding:16px 28px;
                        font:400 12px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#9ca3af;">
-          ${
-            kind === "lead"
-              ? "Sent when someone completed the chat form."
-              : "They were told you would reply within 24 hours."
-          }
+          ${esc(FOOTERS[kind] || FOOTERS.lead)}
         </td></tr>
 
       </table>
@@ -148,20 +153,30 @@ function buildHtml({ kind, lead, question, transcript }) {
 </body></html>`;
 }
 
-function buildText({ kind, lead, question }) {
+function buildText({ kind, lead, question, transcript, interests }) {
   const k = KINDS[kind] || KINDS.lead;
-  return [
+  const who = clean(lead?.name) || "Visitor";
+  const lines = [
     k.label,
     "",
-    `Name:    ${clean(lead?.name)}`,
-    `Email:   ${clean(lead?.email)}`,
-    `Phone:   ${clean(lead?.phone)}`,
-    `Service: ${clean(lead?.service)}`,
-    "",
-    "Project details:",
-    clean(lead?.details),
-    question ? `\nTheir question:\n${clean(question)}` : "",
-  ].join("\n");
+    `Name:  ${who}`,
+    `Email: ${clean(lead?.email)}`,
+    `Phone: ${clean(lead?.phone)}`,
+  ];
+
+  if (interests?.length) lines.push(`Interested in: ${interests.join(", ")}`);
+  if (lead?.details) lines.push("", "Project details:", clean(lead.details));
+  if (question) lines.push("", "Their question:", clean(question));
+
+  if (transcript?.length) {
+    lines.push("", "Conversation:");
+    for (const m of transcript.slice(-40)) {
+      lines.push(`${m.from === "bot" ? "Assistant" : who}: ${clean(m.text)}`);
+    }
+  }
+
+  lines.push("", FOOTERS[kind] || FOOTERS.lead);
+  return lines.join("\n");
 }
 
 export async function POST(request) {
@@ -182,7 +197,10 @@ export async function POST(request) {
   };
   const question = clean(body?.question, 1000);
   const transcript = Array.isArray(body?.transcript)
-    ? body.transcript.slice(-14).map((m) => ({ from: m?.from === "bot" ? "bot" : "user", text: clean(m?.text, 1200) }))
+    ? body.transcript.slice(-40).map((m) => ({ from: m?.from === "bot" ? "bot" : "user", text: clean(m?.text, 1200) }))
+    : [];
+  const interests = Array.isArray(body?.interests)
+    ? body.interests.slice(0, 8).map((v) => plain(v, 60)).filter(Boolean)
     : [];
 
   if (!lead.name || !lead.email) {
@@ -202,7 +220,9 @@ export async function POST(request) {
       ? `New lead: ${who}${lead.service ? ` · ${plain(lead.service)}` : ""}`
       : kind === "pricing"
         ? `Pricing request: ${who}`
-        : `${who} wants to talk to you`;
+        : kind === "summary"
+          ? `Chat finished: ${who}${interests.length ? ` · ${interests.join(", ")}` : ""}`
+          : `${who} wants to talk to you`;
 
   try {
     const res = await fetch("https://api.resend.com/emails", {
@@ -213,8 +233,8 @@ export async function POST(request) {
         to: [TO],
         reply_to: lead.email,
         subject,
-        html: buildHtml({ kind, lead, question, transcript }),
-        text: buildText({ kind, lead, question }),
+        html: buildHtml({ kind, lead, question, transcript, interests }),
+        text: buildText({ kind, lead, question, transcript, interests }),
       }),
     });
 

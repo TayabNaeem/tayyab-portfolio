@@ -1,29 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MessageSquare, X, Send, ChevronLeft } from "lucide-react";
-import { answer, ESCALATING, SUGGESTIONS } from "@/lib/chatbot";
-
-const SERVICES = [
-  "Shopify Development",
-  "WordPress Development",
-  "AI Chatbot & Voice Agents",
-  "Automations",
-  "Meta Ads",
-  "Landing Pages",
-  "Something else",
-];
+import { answer, ESCALATING, SERVICE_LABELS, SUGGESTIONS } from "@/lib/chatbot";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 const REPLY_MS = 700;
+/** Quiet for this long and the conversation is treated as finished. */
+const IDLE_MS = 90_000;
 
-/** Sends to the lead route. Never throws: a failed notification must not break the chat. */
+/** Posts to the lead route. Never throws: a failed notification must not break the chat. */
 async function notify(payload) {
   try {
     const res = await fetch("/api/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
+      keepalive: true,
     });
     return await res.json();
   } catch {
@@ -56,13 +49,7 @@ export default function ChatWidget() {
   const [stage, setStage] = useState("form"); // form | chat
   const [sending, setSending] = useState(false);
   const [errors, setErrors] = useState({});
-  const [lead, setLead] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    service: SERVICES[0],
-    details: "",
-  });
+  const [lead, setLead] = useState({ name: "", email: "", phone: "" });
   const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState("");
   const [typing, setTyping] = useState(false);
@@ -70,9 +57,75 @@ export default function ChatWidget() {
   const threadRef = useRef(null);
   const inputRef = useRef(null);
   const timers = useRef([]);
+  const idleTimer = useRef(null);
 
-  // clear any pending reply timers on unmount
-  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+  // Unload handlers fire outside React's render, so the latest values have to
+  // be reachable through refs rather than closed-over state.
+  const leadRef = useRef(lead);
+  const messagesRef = useRef(messages);
+  const interestsRef = useRef(new Set());
+  // how many messages the last wrap-up covered, so nothing is sent twice and
+  // anything said afterwards still gets through
+  const sentUpTo = useRef(0);
+
+  leadRef.current = lead;
+  messagesRef.current = messages;
+
+  /**
+   * The conversation is over: send Tayyab what was said. Called on close, on
+   * going idle, and on leaving the page — whichever happens first.
+   */
+  const sendWrap = useCallback((viaBeacon = false) => {
+    const msgs = messagesRef.current;
+    if (!msgs.some((m) => m.from === "user")) return; // nothing was asked
+    if (msgs.length <= sentUpTo.current) return; // already reported
+    sentUpTo.current = msgs.length;
+
+    const payload = {
+      kind: "summary",
+      lead: leadRef.current,
+      interests: [...interestsRef.current].map((id) => SERVICE_LABELS[id]).filter(Boolean),
+      transcript: msgs,
+    };
+
+    // A normal fetch is cancelled when the page goes away; a beacon is not.
+    if (viaBeacon && typeof navigator !== "undefined" && navigator.sendBeacon) {
+      navigator.sendBeacon(
+        "/api/lead",
+        new Blob([JSON.stringify(payload)], { type: "application/json" })
+      );
+      return;
+    }
+    notify(payload);
+  }, []);
+
+  const bumpIdle = useCallback(() => {
+    clearTimeout(idleTimer.current);
+    idleTimer.current = setTimeout(() => sendWrap(false), IDLE_MS);
+  }, [sendWrap]);
+
+  // Leaving the page ends the conversation. pagehide covers the bfcache path
+  // that plain unload misses, and hiding the tab covers mobile app switching.
+  useEffect(() => {
+    const onHide = () => sendWrap(true);
+    const onVis = () => document.visibilityState === "hidden" && sendWrap(true);
+    window.addEventListener("pagehide", onHide);
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      window.removeEventListener("pagehide", onHide);
+      document.removeEventListener("visibilitychange", onVis);
+    };
+  }, [sendWrap]);
+
+  // clear pending timers on unmount, and report whatever was said
+  useEffect(
+    () => () => {
+      timers.current.forEach(clearTimeout);
+      clearTimeout(idleTimer.current);
+      sendWrap(false);
+    },
+    [sendWrap]
+  );
 
   // keep the newest message in view
   useEffect(() => {
@@ -80,13 +133,18 @@ export default function ChatWidget() {
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages, typing, stage]);
 
+  const closePanel = useCallback(() => {
+    setOpen(false);
+    sendWrap(false);
+  }, [sendWrap]);
+
   // close on Escape
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    const onKey = (e) => e.key === "Escape" && closePanel();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [open, closePanel]);
 
   const set = (k) => (e) => {
     setLead((p) => ({ ...p, [k]: e.target.value }));
@@ -98,10 +156,12 @@ export default function ChatWidget() {
     const next = {};
     if (!lead.name.trim()) next.name = "Your name, please.";
     if (!EMAIL_RE.test(lead.email.trim())) next.email = "That email does not look right.";
-    if (!lead.details.trim()) next.details = "A line or two about the project.";
+    if (lead.phone.replace(/\D/g, "").length < 7) next.phone = "A number he can reach you on.";
     setErrors(next);
     if (Object.keys(next).length) return;
 
+    // Sent before a single question is asked, so a lead is never lost to
+    // someone closing the tab mid-conversation.
     setSending(true);
     await notify({ kind: "lead", lead });
     setSending(false);
@@ -110,9 +170,10 @@ export default function ChatWidget() {
     setMessages([
       {
         from: "bot",
-        text: `Thanks ${lead.name.trim().split(/\s+/)[0]}. Tayyab has your details and will come back to you personally.\n\nIn the meantime, ask me anything about the services, how a project runs, or the work behind this site.`,
+        text: `Thanks ${lead.name.trim().split(/\s+/)[0]}. Tayyab has your details and will come back to you personally.\n\nSo he arrives with something useful — what are you building, and what is getting in the way?`,
       },
     ]);
+    bumpIdle();
     setTimeout(() => inputRef.current?.focus(), 80);
   };
 
@@ -124,17 +185,27 @@ export default function ChatWidget() {
     setMessages(history);
     setDraft("");
     setTyping(true);
+    bumpIdle();
 
     const { id, reply } = answer(text);
+    if (SERVICE_LABELS[id]) interestsRef.current.add(id);
 
     // a beat before replying, so it does not feel like a lookup table
     const t = setTimeout(() => {
       setTyping(false);
-      setMessages((m) => [...m, { from: "bot", text: reply }]);
+      const withReply = [...history, { from: "bot", text: reply }];
+      setMessages(withReply);
 
-      // pricing and "put me through" both get emailed to Tayyab
+      // pricing and "put me through" both get emailed to Tayyab straight away
       if (ESCALATING.has(id)) {
-        notify({ kind: id, lead, question: text, transcript: history });
+        notify({
+          kind: id,
+          lead: leadRef.current,
+          question: text,
+          transcript: withReply,
+          interests: [...interestsRef.current].map((k) => SERVICE_LABELS[k]).filter(Boolean),
+        });
+        sentUpTo.current = withReply.length; // the wrap-up would only repeat it
       }
     }, REPLY_MS);
     timers.current.push(t);
@@ -145,17 +216,14 @@ export default function ChatWidget() {
       {/* launcher */}
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => (open ? closePanel() : setOpen(true))}
         aria-expanded={open}
         aria-label={open ? "Close chat" : "Chat with the assistant"}
         className="fixed bottom-5 right-5 z-[9998] grid h-14 w-14 place-items-center rounded-full bg-grad text-bg shadow-glow transition-transform duration-300 hover:scale-105 sm:bottom-7 sm:right-7"
       >
         {open ? <X size={22} strokeWidth={2.2} /> : <MessageSquare size={22} strokeWidth={2} />}
         {!open && (
-          <span
-            aria-hidden
-            className="absolute right-0 top-0 flex h-3 w-3"
-          >
+          <span aria-hidden className="absolute right-0 top-0 flex h-3 w-3">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-light opacity-80" />
             <span className="relative inline-flex h-3 w-3 rounded-full bg-brand-light" />
           </span>
@@ -183,7 +251,7 @@ export default function ChatWidget() {
               <button
                 type="button"
                 onClick={() => setStage("form")}
-                aria-label="Back to the form"
+                aria-label="Back to your details"
                 className="grid h-7 w-7 place-items-center rounded-full text-dim transition-colors hover:text-white"
               >
                 <ChevronLeft size={17} strokeWidth={2.2} />
@@ -206,7 +274,7 @@ export default function ChatWidget() {
             </div>
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={closePanel}
               aria-label="Close chat"
               className="grid h-7 w-7 place-items-center rounded-full text-dim transition-colors hover:text-white"
             >
@@ -215,11 +283,10 @@ export default function ChatWidget() {
           </div>
 
           {stage === "form" ? (
-            /* lead capture */
+            /* three fields, nothing more — the rest comes out of the conversation */
             <form onSubmit={submitForm} className="flex min-h-0 flex-1 flex-col overflow-y-auto p-4">
               <p className="body mb-4 text-[0.9rem]">
-                Leave your details and Tayyab will get back to you. Then I can answer whatever you
-                want to know in the meantime.
+                Three quick details so Tayyab can reach you. Then ask me anything.
               </p>
 
               <div className="flex flex-col gap-2.5">
@@ -232,7 +299,9 @@ export default function ChatWidget() {
                     autoComplete="name"
                     className="field-input !py-2.5 !text-[0.9rem]"
                   />
-                  {errors.name && <span className="mt-1 block text-[0.76rem] text-red-400">{errors.name}</span>}
+                  {errors.name && (
+                    <span className="mt-1 block text-[0.76rem] text-red-400">{errors.name}</span>
+                  )}
                 </div>
 
                 <div>
@@ -245,43 +314,23 @@ export default function ChatWidget() {
                     autoComplete="email"
                     className="field-input !py-2.5 !text-[0.9rem]"
                   />
-                  {errors.email && <span className="mt-1 block text-[0.76rem] text-red-400">{errors.email}</span>}
+                  {errors.email && (
+                    <span className="mt-1 block text-[0.76rem] text-red-400">{errors.email}</span>
+                  )}
                 </div>
 
-                <input
-                  value={lead.phone}
-                  onChange={set("phone")}
-                  type="tel"
-                  placeholder="Phone (optional)"
-                  aria-label="Phone"
-                  autoComplete="tel"
-                  className="field-input !py-2.5 !text-[0.9rem]"
-                />
-
-                <select
-                  value={lead.service}
-                  onChange={set("service")}
-                  aria-label="What you need"
-                  className="field-input !py-2.5 !text-[0.9rem]"
-                >
-                  {SERVICES.map((s) => (
-                    <option key={s} value={s} style={{ background: "#17171c" }}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-
                 <div>
-                  <textarea
-                    value={lead.details}
-                    onChange={set("details")}
-                    rows={3}
-                    placeholder="What are you building?"
-                    aria-label="Project details"
-                    className="field-input !py-2.5 !text-[0.9rem] resize-none"
+                  <input
+                    value={lead.phone}
+                    onChange={set("phone")}
+                    type="tel"
+                    placeholder="Phone"
+                    aria-label="Phone"
+                    autoComplete="tel"
+                    className="field-input !py-2.5 !text-[0.9rem]"
                   />
-                  {errors.details && (
-                    <span className="mt-1 block text-[0.76rem] text-red-400">{errors.details}</span>
+                  {errors.phone && (
+                    <span className="mt-1 block text-[0.76rem] text-red-400">{errors.phone}</span>
                   )}
                 </div>
               </div>
@@ -302,7 +351,10 @@ export default function ChatWidget() {
           ) : (
             /* conversation */
             <>
-              <div ref={threadRef} className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto p-4">
+              <div
+                ref={threadRef}
+                className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto p-4"
+              >
                 {messages.map((m, i) => (
                   <Bubble key={i} from={m.from} text={m.text} />
                 ))}
@@ -311,7 +363,11 @@ export default function ChatWidget() {
                   <div className="flex justify-start">
                     <span
                       className="inline-flex items-center gap-1.5 rounded-2xl px-3.5 py-3"
-                      style={{ background: "#1c1c21", border: "1px solid var(--border)", borderBottomLeftRadius: 6 }}
+                      style={{
+                        background: "#1c1c21",
+                        border: "1px solid var(--border)",
+                        borderBottomLeftRadius: 6,
+                      }}
                       aria-label="typing"
                     >
                       {[0, 1, 2].map((d) => (
