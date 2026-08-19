@@ -182,8 +182,12 @@ export default function WorkShowcase({ limit = 8 }) {
             holds one position while the projects step past it. Left outside,
             it only appeared once the track ran out, with the whole unused half
             of the viewport sitting above it. */}
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-          <div className="shell w-full">
+        <div className="sticky top-0 flex h-screen overflow-hidden">
+          {/* justify-evenly splits the leftover height into three equal parts:
+              above the slide, between slide and button, and below the button.
+              Centring instead piled it all above and below, leaving a wide gap
+              under the heading and a cramped one over the button. */}
+          <div className="shell flex h-full w-full flex-col justify-evenly">
             {/* Fixed height, because projects carry different amounts of copy
                 and tags. Left to size itself the row swings by ~70px, and the
                 button under it moves every time the slide changes. */}
@@ -208,7 +212,7 @@ export default function WorkShowcase({ limit = 8 }) {
             </div>
 
             {remaining > 0 && (
-              <div className="mt-7 flex justify-center lg:mt-9">
+              <div className="flex shrink-0 justify-center">
                 <Link href="/work" className="btn btn-primary">
                   View more work <ArrowUpRight size={15} strokeWidth={2.2} />
                 </Link>
