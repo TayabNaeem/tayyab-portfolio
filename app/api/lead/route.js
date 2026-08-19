@@ -292,6 +292,25 @@ export async function POST(request) {
   } catch (err) {
     // Bad credentials, blocked port, host down — log it, keep the chat working.
     console.error("[lead] smtp send failed", err?.code, err?.responseCode, err?.message || err);
+
+    // On an auth rejection, describe the shape of what was configured. Runtime
+    // logs are private to the project owner, and none of this is the secret
+    // itself — but it is enough to spot a normal password in SMTP_PASS, a
+    // mistyped mailbox, or a stray character.
+    if (err?.code === "EAUTH") {
+      const u = String(process.env.SMTP_USER || "").trim();
+      const p = String(process.env.SMTP_PASS || "");
+      const squashed = p.trim().replace(/\s+/g, "");
+      console.error("[lead] auth shape", {
+        user: u.replace(/^(.{2}).*(@.*)$/, "$1***$2") || "(empty)",
+        passLength: squashed.length,
+        passHadSpaces: /\s/.test(p.trim()),
+        looksLikeAppPassword: /^[a-z]{16}$/i.test(squashed),
+        host: String(process.env.SMTP_HOST || "").trim(),
+        port: Number(process.env.SMTP_PORT) || 587,
+      });
+    }
+
     transporter = null; // force a fresh connection next time
     // The code and status say which of those it was. Neither reveals the
     // credentials, and having them in the response beats digging through logs.
