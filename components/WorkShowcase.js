@@ -129,7 +129,10 @@ export default function WorkShowcase({ limit = 8 }) {
     if (!el) return;
 
     const update = () => {
-      const span = el.offsetHeight - window.innerHeight;
+      // the pinned box is shorter than the viewport, so the travel is measured
+      // against the box rather than against window.innerHeight
+      const pinned = el.firstElementChild?.offsetHeight || window.innerHeight;
+      const span = el.offsetHeight - pinned;
       if (span <= 0) return;
       const progress = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / span));
       setActive(Math.min(last, Math.floor(progress * items.length)));
@@ -161,7 +164,7 @@ export default function WorkShowcase({ limit = 8 }) {
   return (
     <section id="portfolio">
       {/* Heading sits above the pinned area so the pin never has to clip it */}
-      <div className="shell pt-[4.5rem] md:pt-[5.5rem]">
+      <div className="shell pt-[3.5rem] md:pt-[4.25rem]">
         <Reveal className="mx-auto max-w-[620px] text-center">
           <span className="eyebrow">SELECTED WORK</span>
           <h2 className="h2">
@@ -174,8 +177,11 @@ export default function WorkShowcase({ limit = 8 }) {
       </div>
 
       {/* Pinned at every breakpoint: scrolling moves through the work */}
-      <div ref={trackRef} className="relative" style={{ height: `${items.length * 100}vh` }}>
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+      <div ref={trackRef} className="relative" style={{ height: `${items.length * 78}vh` }}>
+        {/* Sized to the slide rather than to the viewport. A full height pin
+            left ~180px of dead air above and below the content, which read as
+            a gap against the heading and against the button below. */}
+        <div className="sticky top-0 flex h-[78vh] max-h-[640px] min-h-[460px] items-center overflow-hidden">
           <div className="shell w-full">
             <div className="flex flex-col gap-7 lg:flex-row lg:items-center lg:gap-8 xl:gap-10">
               <div className="order-2 lg:order-1">
