@@ -277,8 +277,16 @@ export async function POST(request) {
     return Response.json({ ok: true, delivered: true });
   } catch (err) {
     // Bad credentials, blocked port, host down — log it, keep the chat working.
-    console.error("[lead] smtp send failed", err?.message || err);
+    console.error("[lead] smtp send failed", err?.code, err?.responseCode, err?.message || err);
     transporter = null; // force a fresh connection next time
-    return Response.json({ ok: true, delivered: false, reason: "send failed" });
+    // The code and status say which of those it was. Neither reveals the
+    // credentials, and having them in the response beats digging through logs.
+    return Response.json({
+      ok: true,
+      delivered: false,
+      reason: "send failed",
+      code: err?.code || null,
+      status: err?.responseCode || null,
+    });
   }
 }
