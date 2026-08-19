@@ -177,13 +177,17 @@ export default function WorkShowcase({ limit = 8 }) {
       </div>
 
       {/* Pinned at every breakpoint: scrolling moves through the work */}
-      <div ref={trackRef} className="relative" style={{ height: `${items.length * 78}vh` }}>
-        {/* Sized to the slide rather than to the viewport. A full height pin
-            left ~180px of dead air above and below the content, which read as
-            a gap against the heading and against the button below. */}
-        <div className="sticky top-0 flex h-[78vh] max-h-[640px] min-h-[460px] items-center overflow-hidden">
+      <div ref={trackRef} className="relative" style={{ height: `${items.length * 100}vh` }}>
+        {/* The button lives inside the pin, directly under the slide, so it
+            holds one position while the projects step past it. Left outside,
+            it only appeared once the track ran out, with the whole unused half
+            of the viewport sitting above it. */}
+        <div className="sticky top-0 flex h-screen items-center overflow-hidden">
           <div className="shell w-full">
-            <div className="flex flex-col gap-7 lg:flex-row lg:items-center lg:gap-8 xl:gap-10">
+            {/* Fixed height, because projects carry different amounts of copy
+                and tags. Left to size itself the row swings by ~70px, and the
+                button under it moves every time the slide changes. */}
+            <div className="flex min-h-[34rem] flex-col justify-center gap-7 sm:min-h-[36rem] lg:min-h-[27.5rem] lg:flex-row lg:items-center lg:gap-8 xl:gap-10">
               <div className="order-2 lg:order-1">
                 <Dots items={items} active={active} onPick={jumpTo} />
               </div>
@@ -202,21 +206,17 @@ export default function WorkShowcase({ limit = 8 }) {
                 </div>
               </div>
             </div>
+
+            {remaining > 0 && (
+              <div className="mt-7 flex justify-center lg:mt-9">
+                <Link href="/work" className="btn btn-primary">
+                  View more work <ArrowUpRight size={15} strokeWidth={2.2} />
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      {remaining > 0 && (
-        <div className="shell pb-[4.5rem] md:pb-[5.5rem]">
-          <Reveal>
-            <div className="flex justify-center">
-              <Link href="/work" className="btn btn-primary">
-                View more work <ArrowUpRight size={15} strokeWidth={2.2} />
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      )}
     </section>
   );
 }
