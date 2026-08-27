@@ -148,6 +148,21 @@
 }
 
 /* CTA thread: typing dots, and the caret in the composer */
+/* The assistant's eyes. fill-box so the origin is the circle, not the
+   whole SVG canvas, otherwise the blink slides them sideways. */
+.agent-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: agent-blink 5.5s ease-in-out infinite;
+}
+.agent-eye:nth-of-type(2) {
+  animation-delay: 0.04s;
+}
+@keyframes agent-blink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  94% { transform: scaleY(0.12); }
+}
+
 @keyframes typing {
   0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
   30% { opacity: 1; transform: translateY(-3px); }

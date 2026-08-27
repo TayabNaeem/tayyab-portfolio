@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MessageSquare, X, Send, ChevronLeft } from "lucide-react";
+import { X, Send, ChevronLeft } from "lucide-react";
+import AgentIcon from "./AgentIcon";
 import { answer, ESCALATING, SERVICE_LABELS, SUGGESTIONS } from "@/lib/chatbot";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
@@ -221,7 +222,7 @@ export default function ChatWidget() {
         aria-label={open ? "Close chat" : "Chat with the assistant"}
         className="fixed bottom-5 right-5 z-[9998] grid h-14 w-14 place-items-center rounded-full bg-grad text-bg shadow-glow transition-transform duration-300 hover:scale-105 sm:bottom-7 sm:right-7"
       >
-        {open ? <X size={22} strokeWidth={2.2} /> : <MessageSquare size={22} strokeWidth={2} />}
+        {open ? <X size={22} strokeWidth={2.2} /> : <AgentIcon size={26} blink />}
         {!open && (
           <span aria-hidden className="absolute right-0 top-0 flex h-3 w-3">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-light opacity-80" />
