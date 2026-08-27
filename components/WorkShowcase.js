@@ -183,28 +183,27 @@ export default function WorkShowcase({ limit = 8 }) {
             it only appeared once the track ran out, with the whole unused half
             of the viewport sitting above it. */}
         <div className="sticky top-0 flex h-screen overflow-hidden">
-          {/* justify-evenly splits the leftover height into three equal parts:
-              above the slide, between slide and button, and below the button.
-              Centring instead piled it all above and below, leaving a wide gap
-              under the heading and a cramped one over the button. */}
-          <div className="shell flex h-full w-full flex-col justify-evenly">
+          {/* The button is tied close to the slide, and the leftover height is
+              biased downward so the pair sits a little above centre. Splitting
+              the leftover evenly pushed the button too far from the design. */}
+          <div className="shell flex h-full w-full flex-col justify-center pb-[7vh]">
             {/* Fixed height, because projects carry different amounts of copy
                 and tags. Left to size itself the row swings by ~70px, and the
                 button under it moves every time the slide changes. */}
-            <div className="flex min-h-[34rem] flex-col justify-center gap-7 sm:min-h-[36rem] lg:min-h-[27.5rem] lg:flex-row lg:items-center lg:gap-8 xl:gap-10">
+            <div className="flex min-h-[34rem] flex-col justify-center gap-7 sm:min-h-[36rem] lg:min-h-[30rem] lg:flex-row lg:items-center lg:gap-8 xl:gap-10">
               <div className="order-2 lg:order-1">
                 <Dots items={items} active={active} onPick={jumpTo} />
               </div>
 
               {/* only the current project is mounted; the keys replay its entrance */}
-              <div className="order-1 grid min-w-0 flex-1 items-center gap-7 lg:order-2 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+              <div className="order-1 grid min-w-0 flex-1 items-center gap-7 lg:order-2 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
                 <div key={`copy-${current.id}`} className="slide-in min-w-0">
                   <Details p={current} index={active} total={items.length} />
                 </div>
 
                 <div
                   key={`device-${current.id}`}
-                  className="slide-in-soft order-first min-w-0 pr-[3%] lg:order-none"
+                  className="slide-in-soft order-first min-w-0 lg:order-none"
                 >
                   <DeviceMockup project={current} />
                 </div>
@@ -212,7 +211,7 @@ export default function WorkShowcase({ limit = 8 }) {
             </div>
 
             {remaining > 0 && (
-              <div className="flex shrink-0 justify-center">
+              <div className="mt-10 flex shrink-0 justify-center lg:mt-12">
                 <Link href="/work" className="btn btn-primary">
                   View more work <ArrowUpRight size={15} strokeWidth={2.2} />
                 </Link>
