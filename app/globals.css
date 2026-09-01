@@ -265,6 +265,26 @@
   to { transform: translateY(calc(-100% + 100px)); }
 }
 
+/* Review marquee rows. Same keyframe as the logos; direction is flipped with
+   animation-direction so the second row travels the other way. Fading the ends
+   stops cards from being chopped off at the screen edge. */
+.marquee-row {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.marquee-track {
+  animation-name: marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+.marquee-track[data-dir="right"] {
+  animation-direction: reverse;
+}
+.marquee-row:hover .marquee-track {
+  animation-play-state: paused;
+}
+
 /* Infinite logo marquee — track is duplicated, so -50% loops seamlessly */
 .animate-marquee {
   animation: marquee 34s linear infinite;

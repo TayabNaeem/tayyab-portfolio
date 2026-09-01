@@ -1,5 +1,6 @@
 import PageHeader from "@/components/PageHeader";
 import PageTransition from "@/components/PageTransition";
+import ReviewMarquee from "@/components/ReviewMarquee";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 
@@ -17,6 +18,7 @@ export default function ReviewsPage() {
         accent="about me."
         subtitle="Real feedback from founders and operations teams I've built storefronts, chatbots and automations for."
       />
+      <ReviewMarquee />
       <Testimonials hideHeading />
       <CTA />
     </PageTransition>
