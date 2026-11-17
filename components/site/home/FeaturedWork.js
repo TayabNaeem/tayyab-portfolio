@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { CALEDONIA, STORES, AGENTS } from "@/lib/site";
+import { CALEDONIA, STORES, AGENTS, projectHref } from "@/lib/site";
 import { section, eyebrow, h2, pill } from "./styles";
 
 // Six stores on the home page, with shorter one-line descriptions than /work.
@@ -76,6 +76,9 @@ export default function FeaturedWork() {
             >
               Visit the live site ↗
             </a>
+            <Link href={projectHref(CALEDONIA)} style={{ fontWeight: 600, fontSize: 15, color: "var(--night-text)" }}>
+              View project →
+            </Link>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--night-muted)" }}>{CALEDONIA.tools}</span>
           </div>
         </div>
@@ -89,11 +92,10 @@ export default function FeaturedWork() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 340px), 1fr))", gap: 16 }}>
           {HOME_STORES.map((s) => (
-            <a
+            <Link
               key={s.name}
-              href={s.url}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={projectHref(s)}
+              className="tn-card"
               style={{ display: "flex", alignItems: "center", gap: 16, textDecoration: "none", background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 18, padding: 16 }}
             >
               <span
@@ -105,8 +107,8 @@ export default function FeaturedWork() {
                 <span className="tn-display" style={{ fontWeight: 700, fontSize: 18, letterSpacing: "-0.01em" }}>{s.name}</span>
                 <span style={{ fontSize: 13, color: "var(--muted)" }}>{s.desc}</span>
               </span>
-              <span style={{ fontSize: 16, color: "var(--muted)" }} aria-hidden="true">↗</span>
-            </a>
+              <span style={{ fontSize: 16, color: "var(--muted)" }} aria-hidden="true">→</span>
+            </Link>
           ))}
         </div>
       </div>
@@ -121,7 +123,8 @@ export default function FeaturedWork() {
           {HOME_AGENTS.map((a) => (
             <Link
               key={a.name}
-              href="/work"
+              href={projectHref(a)}
+              className="tn-card"
               style={{ display: "flex", flexDirection: "column", textDecoration: "none", background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 22, overflow: "hidden" }}
             >
               <span style={{ position: "relative", display: "block", aspectRatio: "16 / 9", overflow: "hidden", background: "#1E1F22" }}>

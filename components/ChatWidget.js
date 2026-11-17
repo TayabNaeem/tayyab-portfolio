@@ -31,12 +31,12 @@ function Bubble({ from, text }) {
     <div className={`flex ${bot ? "justify-start" : "justify-end"}`}>
       <div
         className={`max-w-[85%] whitespace-pre-line rounded-2xl px-3.5 py-2.5 text-[0.9rem] leading-[1.55] ${
-          bot ? "text-[#e7e7ea]" : "bg-grad font-medium text-bg"
+          bot ? "text-[#0D1117]" : "font-medium text-white"
         }`}
         style={
           bot
-            ? { background: "#1c1c21", border: "1px solid var(--border)", borderBottomLeftRadius: 6 }
-            : { borderBottomRightRadius: 6 }
+            ? { background: "#EEF0F3", border: "1px solid #E4E7EC", borderBottomLeftRadius: 6 }
+            : { background: "#0D1117", borderBottomRightRadius: 6 }
         }
       >
         {text}
@@ -220,13 +220,13 @@ export default function ChatWidget() {
         onClick={() => (open ? closePanel() : setOpen(true))}
         aria-expanded={open}
         aria-label={open ? "Close chat" : "Chat with the assistant"}
-        className="fixed bottom-5 right-5 z-[9998] grid h-14 w-14 place-items-center rounded-full bg-grad text-bg shadow-glow transition-transform duration-300 hover:scale-105 sm:bottom-7 sm:right-7"
+        className="fixed bottom-5 right-5 z-[9998] grid h-14 w-14 place-items-center rounded-full bg-[#0D1117] text-white shadow-[0_18px_40px_-16px_rgba(13,17,23,0.6)] transition-transform duration-300 hover:scale-105 sm:bottom-7 sm:right-7"
       >
         {open ? <X size={22} strokeWidth={2.2} /> : <AgentIcon size={26} blink />}
         {!open && (
           <span aria-hidden className="absolute right-0 top-0 flex h-3 w-3">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-light opacity-80" />
-            <span className="relative inline-flex h-3 w-3 rounded-full bg-brand-light" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#FF6A3D] opacity-80" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-[#FF6A3D]" />
           </span>
         )}
       </button>
@@ -236,39 +236,42 @@ export default function ChatWidget() {
         <div
           role="dialog"
           aria-label="Chat with Tayyab's assistant"
-          className="slide-in fixed bottom-[5.5rem] right-3 z-[9997] flex w-[min(24rem,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[22px] border shadow-soft sm:bottom-[6.5rem] sm:right-7"
+          className="tn-chat slide-in fixed bottom-[5.5rem] right-3 z-[9997] flex w-[min(24rem,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[22px] border shadow-soft sm:bottom-[6.5rem] sm:right-7"
           style={{
-            borderColor: "var(--border-2)",
-            background: "#141418",
+            borderColor: "#D7DBE2",
+            background: "#FFFFFF",
+            color: "#0D1117",
+            boxShadow: "0 30px 70px -30px rgba(13,17,23,0.45)",
             maxHeight: "min(34rem, calc(100vh - 8rem))",
           }}
         >
           {/* header */}
           <div
             className="flex shrink-0 items-center gap-3 border-b px-4 py-3.5"
-            style={{ borderColor: "var(--border)", background: "#17171c" }}
+            style={{ borderColor: "#E4E7EC", background: "#FFFFFF" }}
           >
             {stage === "chat" && (
               <button
                 type="button"
                 onClick={() => setStage("form")}
                 aria-label="Back to your details"
-                className="grid h-7 w-7 place-items-center rounded-full text-dim transition-colors hover:text-white"
+                className="grid h-7 w-7 place-items-center rounded-full text-[#596170] transition-colors hover:text-[#0D1117]"
               >
                 <ChevronLeft size={17} strokeWidth={2.2} />
               </button>
             )}
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-grad font-display text-[0.78rem] font-bold text-bg">
-              TN
+            <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-[#D7DBE2]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/assets/profile.png" alt="" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "50% 6%", transform: "scale(1.9)", transformOrigin: "50% 14%" }} />
             </span>
             <div className="min-w-0 flex-1">
-              <strong className="block truncate font-display text-[0.92rem] font-semibold">
+              <strong className="block truncate font-display text-[0.95rem] font-bold text-[#0D1117]">
                 Tayyab&apos;s assistant
               </strong>
-              <span className="flex items-center gap-1.5 text-[0.76rem] text-dim">
+              <span className="flex items-center gap-1.5 text-[0.76rem] text-[#596170]">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-70" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0E8A4F] opacity-70" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#0E8A4F]" />
                 </span>
                 Replies in a few seconds
               </span>
@@ -277,7 +280,7 @@ export default function ChatWidget() {
               type="button"
               onClick={closePanel}
               aria-label="Close chat"
-              className="grid h-7 w-7 place-items-center rounded-full text-dim transition-colors hover:text-white"
+              className="grid h-7 w-7 place-items-center rounded-full text-[#596170] transition-colors hover:text-[#0D1117]"
             >
               <X size={16} strokeWidth={2.2} />
             </button>
@@ -365,8 +368,8 @@ export default function ChatWidget() {
                     <span
                       className="inline-flex items-center gap-1.5 rounded-2xl px-3.5 py-3"
                       style={{
-                        background: "#1c1c21",
-                        border: "1px solid var(--border)",
+                        background: "#EEF0F3",
+                        border: "1px solid #E4E7EC",
                         borderBottomLeftRadius: 6,
                       }}
                       aria-label="typing"
@@ -374,7 +377,7 @@ export default function ChatWidget() {
                       {[0, 1, 2].map((d) => (
                         <span
                           key={d}
-                          className="h-1.5 w-1.5 rounded-full bg-brand"
+                          className="h-1.5 w-1.5 rounded-full bg-[#596170]"
                           style={{ animation: `typing 1.3s ${d * 0.18}s ease-in-out infinite` }}
                         />
                       ))}
@@ -389,8 +392,8 @@ export default function ChatWidget() {
                         key={s}
                         type="button"
                         onClick={() => send(s)}
-                        className="rounded-full border px-3 py-1.5 text-[0.78rem] text-dim transition-colors hover:border-brand hover:text-white"
-                        style={{ borderColor: "var(--border-2)" }}
+                        className="rounded-full border px-3 py-1.5 text-[0.78rem] text-[#0D1117] transition-colors hover:border-[#0D1117] hover:bg-[#EEF0F3]"
+                        style={{ borderColor: "#D7DBE2" }}
                       >
                         {s}
                       </button>
@@ -406,7 +409,7 @@ export default function ChatWidget() {
                   send(draft);
                 }}
                 className="flex shrink-0 items-center gap-2 border-t p-3"
-                style={{ borderColor: "var(--border)", background: "#17171c" }}
+                style={{ borderColor: "#E4E7EC", background: "#FFFFFF" }}
               >
                 <input
                   ref={inputRef}
@@ -420,7 +423,7 @@ export default function ChatWidget() {
                   type="submit"
                   disabled={!draft.trim() || typing}
                   aria-label="Send"
-                  className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-grad text-bg transition-transform duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#FF6A3D] text-[#0D1117] transition-transform duration-200 hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
                 >
                   <Send size={16} strokeWidth={2.2} />
                 </button>

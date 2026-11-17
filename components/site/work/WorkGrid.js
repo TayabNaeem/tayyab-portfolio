@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { CALEDONIA, STORES, AGENTS, CATEGORY_LABELS } from "@/lib/site";
+import Link from "next/link";
+import { CALEDONIA, STORES, AGENTS, CATEGORY_LABELS, projectHref } from "@/lib/site";
 
 const OPTIONS = [
   ["all", "All"],
@@ -29,7 +30,7 @@ function GroupHeading({ title, count }) {
 
 function SiteCard({ p }) {
   return (
-    <article style={{ display: "flex", flexDirection: "column", gap: 14, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 20, padding: 20 }}>
+    <article className="tn-card" style={{ display: "flex", flexDirection: "column", gap: 14, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 20, padding: 20 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
         <span
           style={{ display: "grid", placeItems: "center", height: 58, minWidth: 120, maxWidth: 170, padding: "10px 16px", boxSizing: "border-box", borderRadius: 14, border: "1px solid var(--line)", background: p.logoBg || "#FFFFFF" }}
@@ -46,7 +47,9 @@ function SiteCard({ p }) {
         </span>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <h4 style={{ ...display, margin: 0, fontWeight: 700, fontSize: 20, letterSpacing: "-0.02em", lineHeight: 1.2 }}>{p.name}</h4>
+        <h4 style={{ ...display, margin: 0, fontWeight: 700, fontSize: 20, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+          <Link href={projectHref(p)} className="tn-stretch">{p.name}</Link>
+        </h4>
         <span style={{ ...mono, fontSize: 12, color: "var(--muted)" }}>{p.client}</span>
       </div>
       <p style={{ margin: 0, color: "var(--muted)", fontSize: 14, lineHeight: 1.55 }}>{p.desc}</p>
@@ -56,8 +59,8 @@ function SiteCard({ p }) {
         ))}
       </div>
       <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px dashed var(--line)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
-        <span style={{ ...mono, fontSize: 12, color: "var(--muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{domainOf(p.url)}</span>
-        <a href={p.url} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600, fontSize: 14, whiteSpace: "nowrap" }}>Visit live ↗</a>
+        <span style={{ fontWeight: 600, fontSize: 14, whiteSpace: "nowrap" }}>View project →</span>
+        <a href={p.url} target="_blank" rel="noopener noreferrer" className="tn-above" style={{ ...mono, fontSize: 12, color: "var(--muted)", whiteSpace: "nowrap" }}>Visit live ↗</a>
       </div>
     </article>
   );
@@ -65,7 +68,7 @@ function SiteCard({ p }) {
 
 function AgentCard({ p }) {
   return (
-    <article style={{ display: "flex", flexDirection: "column", background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 22, overflow: "hidden" }}>
+    <article className="tn-card" style={{ display: "flex", flexDirection: "column", background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 22, overflow: "hidden" }}>
       <div style={{ position: "relative", aspectRatio: "16 / 9", overflow: "hidden", background: "#1E1F22" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={p.cover} alt={`${p.name} workflow`} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
@@ -75,7 +78,9 @@ function AgentCard({ p }) {
       </div>
       <div style={{ padding: "20px 22px 22px", display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
         <span style={{ ...mono, fontSize: 12, color: "var(--muted)" }}>{p.client}</span>
-        <h4 style={{ ...display, margin: 0, fontWeight: 700, fontSize: 22, letterSpacing: "-0.02em", lineHeight: 1.15 }}>{p.name}</h4>
+        <h4 style={{ ...display, margin: 0, fontWeight: 700, fontSize: 22, letterSpacing: "-0.02em", lineHeight: 1.15 }}>
+          <Link href={projectHref(p)} className="tn-stretch">{p.name}</Link>
+        </h4>
         <p style={{ margin: 0, color: "var(--muted)", fontSize: 15 }}>{p.desc}</p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6, paddingTop: 4 }}>
           {p.tags.map((t) => (
@@ -84,7 +89,7 @@ function AgentCard({ p }) {
         </div>
         <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px dashed var(--line)", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
           <span style={{ ...mono, fontSize: 12, color: "var(--accent-text)" }}>{p.result}</span>
-          <span style={{ ...mono, fontSize: 11, color: "var(--muted)" }}>{p.tools}</span>
+          <span style={{ fontWeight: 600, fontSize: 14 }}>View project →</span>
         </div>
       </div>
     </article>

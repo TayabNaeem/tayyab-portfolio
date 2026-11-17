@@ -50,6 +50,49 @@ body {
 .tn-mono { font-family: var(--font-mono); }
 .tn-display { font-family: var(--font-display), "Segoe UI", sans-serif; }
 
+/* Cards that turn black on hover (How I work and similar). */
+.tn-flip {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.tn-flip .tn-flip-num { color: var(--accent-text); transition: color 0.25s ease; }
+.tn-flip .tn-flip-muted { color: var(--muted); transition: color 0.25s ease; }
+.tn-flip:hover,
+.tn-flip:focus-within {
+  background: var(--night);
+  color: var(--night-text);
+  border-color: var(--night);
+  transform: translateY(-4px);
+}
+.tn-flip:hover .tn-flip-num,
+.tn-flip:focus-within .tn-flip-num { color: var(--accent); }
+.tn-flip:hover .tn-flip-muted,
+.tn-flip:focus-within .tn-flip-muted { color: var(--night-muted); }
+
+/* Project cards: the whole card opens the project page; inner links stay clickable. */
+.tn-card { position: relative; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+.tn-card:hover { transform: translateY(-3px); box-shadow: 0 22px 44px -30px rgba(13, 17, 23, 0.55); border-color: var(--ink) !important; }
+.tn-stretch { text-decoration: none; }
+.tn-stretch::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: 0; }
+.tn-card .tn-above { position: relative; z-index: 1; }
+
+/* Chat widget in the new branding (it reuses older shared input/button classes). */
+.tn-chat .field-input { background: #F4F5F8 !important; color: #0D1117 !important; border: 1px solid #D7DBE2 !important; }
+.tn-chat .field-input::placeholder { color: #8A919E !important; }
+.tn-chat .field-input:focus { border-color: #0D1117 !important; box-shadow: none !important; outline: none; }
+.tn-chat .btn-primary { background: #FF6A3D !important; color: #0D1117 !important; box-shadow: none !important; border: 0 !important; }
+.tn-chat .btn-primary:hover { filter: brightness(1.06); }
+.tn-chat .body { color: #596170 !important; }
+.tn-chat .small { color: #596170 !important; }
+
+/* Scroll timeline: heading pins on wide screens while the list scrolls. */
+.tn-scroll-pin { position: static; }
+@media (min-width: 900px) {
+  .tn-scroll-pin { position: sticky; top: 120px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tn * { transition: none !important; animation: none !important; }
 }

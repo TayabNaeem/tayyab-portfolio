@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CountUp from "@/components/site/CountUp";
+import ScrollTimeline from "@/components/site/about/ScrollTimeline";
 import { CONTACT, PHOTO, STATS } from "@/lib/site";
 
 export const metadata = {
@@ -108,30 +109,12 @@ export default function AboutPage() {
       </section>
 
       {/* Track record */}
-      <section
-        style={{ ...section(112), display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 380px), 1fr))", gap: 48, alignItems: "start" }}
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <span style={eyebrow}>What I&apos;ve built</span>
-          <h2 style={{ ...h2, textWrap: "balance" }}>From storefronts to AI that answers the phone.</h2>
-          <p style={{ margin: 0, color: "var(--muted)" }}>
-            Each step added a skill clients kept asking for. Today they all work together on one project.
-          </p>
-        </div>
-        <ol style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", borderLeft: "2px solid var(--line)" }}>
-          {TRACK.map((t) => (
-            <li key={t.title} style={{ position: "relative", padding: "0 0 32px 32px", display: "flex", flexDirection: "column", gap: 6 }}>
-              <span
-                aria-hidden="true"
-                style={{ position: "absolute", left: -8, top: 6, width: 14, height: 14, borderRadius: "50%", background: "var(--surface)", border: "3px solid var(--ink)" }}
-              />
-              <span style={{ ...mono, fontSize: 12, color: "var(--accent-text)" }}>{t.count}</span>
-              <b style={{ ...display, fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em" }}>{t.title}</b>
-              <span style={{ color: "var(--muted)", fontSize: 15 }}>{t.desc}</span>
-            </li>
-          ))}
-        </ol>
-      </section>
+      <ScrollTimeline
+        eyebrow="What I've built"
+        title="From storefronts to AI that answers the phone."
+        intro="Each step added a skill clients kept asking for. Today they all work together on one project."
+        items={TRACK}
+      />
 
       {/* How I work */}
       <section style={{ ...section(112), display: "flex", flexDirection: "column", gap: 36 }}>
@@ -140,15 +123,13 @@ export default function AboutPage() {
           {HOW.map((h) => (
             <div
               key={h.n}
-              style={
-                h.dark
-                  ? { background: "var(--night)", color: "var(--night-text)", borderRadius: 24, padding: 30, display: "flex", flexDirection: "column", gap: 10 }
-                  : { background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 24, padding: 30, display: "flex", flexDirection: "column", gap: 10 }
-              }
+              tabIndex={0}
+              className="tn-flip"
+              style={{ borderRadius: 24, padding: 30, display: "flex", flexDirection: "column", gap: 10, cursor: "default" }}
             >
-              <span style={{ ...mono, fontSize: 12, color: h.dark ? "var(--accent)" : "var(--accent-text)" }}>{h.n}</span>
+              <span className="tn-flip-num" style={{ ...mono, fontSize: 12 }}>{h.n}</span>
               <h3 style={{ ...display, margin: 0, fontWeight: 700, fontSize: 26, lineHeight: 1.1 }}>{h.title}</h3>
-              <p style={{ margin: 0, color: h.dark ? "var(--night-muted)" : "var(--muted)", fontSize: 15 }}>{h.desc}</p>
+              <p className="tn-flip-muted" style={{ margin: 0, fontSize: 15 }}>{h.desc}</p>
             </div>
           ))}
         </div>

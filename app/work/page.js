@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CALEDONIA, STORES, AGENTS } from "@/lib/site";
+import { CALEDONIA, STORES, AGENTS, projectHref } from "@/lib/site";
 import WorkGrid from "@/components/site/work/WorkGrid";
 
 export const metadata = {
@@ -57,7 +57,7 @@ export default function WorkPage() {
               >
                 Visit the live site ↗
               </a>
-              <span style={{ ...mono, fontSize: 13, color: "var(--night-muted)" }}>caledoniachauffeurgroup.com</span>
+              <Link href={projectHref(CALEDONIA)} style={{ fontWeight: 600, fontSize: 15, color: "var(--night-text)" }}>View project →</Link>
             </div>
           </div>
           <div style={{ position: "relative", minHeight: 400, background: "#0B0B0C" }}>
