@@ -72,6 +72,7 @@ const KINDS = {
   pricing: { label: "Pricing request", tint: "#f59e0b" },
   connect: { label: "Wants to talk to you", tint: "#22c55e" },
   summary: { label: "Chat finished", tint: "#3b82f6" },
+  contact: { label: "Contact form", tint: "#FF6A3D" },
 };
 
 const FOOTERS = {
@@ -79,6 +80,7 @@ const FOOTERS = {
   pricing: "They were told you would reply within 24 hours.",
   connect: "They were told you would reply within 24 hours.",
   summary: "Sent when the conversation ended, or when they went quiet.",
+  contact: "Sent from the project brief form on your website. It is also saved in Firebase under contacts.",
 };
 
 const clean = (v, max = 2000) =>
@@ -266,6 +268,8 @@ export async function POST(request) {
   const subject =
     kind === "lead"
       ? `New lead: ${who}${lead.service ? ` · ${plain(lead.service)}` : ""}`
+      : kind === "contact"
+        ? `Contact form: ${who}${lead.service ? ` · ${plain(lead.service)}` : ""}`
       : kind === "pricing"
         ? `Pricing request: ${who}`
         : kind === "summary"

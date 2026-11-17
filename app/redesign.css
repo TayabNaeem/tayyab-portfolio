@@ -1,0 +1,55 @@
+/*
+ * Design A tokens and base styles. Loaded after globals.css so these win.
+ * Orange (--accent) is for buttons and small accents only, never a section background.
+ */
+:root {
+  --bg: #EEF0F3;
+  --surface: #FFFFFF;
+  --ink: #0D1117;
+  --muted: #596170;
+  --line: #D7DBE2;
+  --accent: #FF6A3D;
+  --accent-text: #B93A0C;
+  --dot: #0E8A4F;
+  --tint: #E3E7ED;
+  --night: #0D1117;
+  --night-2: #161B24;
+  --night-line: #262C37;
+  --night-text: #EEF1F5;
+  --night-muted: #9AA3B2;
+
+  --font-sans: "Geist", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, Consolas, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* Headings default to the display face; pages set sizes inline. */
+.tn h1, .tn h2, .tn h3, .tn h4 {
+  font-family: var(--font-display), "Segoe UI", sans-serif;
+  line-height: 1;
+  margin: 0;
+}
+
+.tn a { color: inherit; }
+.tn a:hover { color: var(--accent-text); }
+.tn a.tn-btn-primary:hover,
+.tn a.tn-btn-dark:hover { color: inherit; filter: brightness(1.06); }
+.tn :focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; border-radius: 6px; }
+.tn summary { cursor: pointer; list-style: none; }
+.tn summary::-webkit-details-marker { display: none; }
+.tn .row-btn:hover .row-title { color: var(--accent-text); }
+
+.tn-shell { max-width: 1240px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
+.tn-mono { font-family: var(--font-mono); }
+.tn-display { font-family: var(--font-display), "Segoe UI", sans-serif; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tn * { transition: none !important; animation: none !important; }
+}
